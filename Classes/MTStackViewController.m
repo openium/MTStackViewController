@@ -1,6 +1,6 @@
 //
 //  MTStackViewController.m
-//  ValpakClient
+//  Maple
 //
 //  Created by Andrew Carter on 10/19/12.
 //
@@ -376,7 +376,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     
     for (Class class in [self noSimultaneousPanningViewClasses])
     {
-        if ([[otherGestureRecognizer view] isKindOfClass:class])
+        if ([[otherGestureRecognizer view] isKindOfClass:class] || [[[otherGestureRecognizer view] superview] isKindOfClass:class])
         {
             shouldRecognize = NO;
         }
