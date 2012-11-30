@@ -80,15 +80,19 @@
 // Default: [UIColor blackColor]
 @property (nonatomic, copy) UIColor *shadowColor;
 
-// Overlay color for the left view controller's view when out of focus
+// Rasterizes views during animation when set to YES. Imporoves general performance.
+// Default: YES
+@property (nonatomic, assign) BOOL rasterizesViewsDuringAnimation;
+
+// Overlay color for the left view controller's view when out of focus.
 // Default: [UIColor blackColor]
 @property (nonatomic, copy) UIColor *leftViewControllerOverlayColor;
 
-// Overlay color for the right view controller's view when out of focus
+// Overlay color for the right view controller's view when out of focus.
 // Default: [UIColor blackColor]
 @property (nonatomic, copy) UIColor *rightViewControllerOverlayColor;
 
-// NSArray of class objects which should prevent panning. These objects must be UIView class objects
+// NSArray of class objects which should prevent panning. These objects must be UIView class objects.
 // Default: nil
 @property (nonatomic, copy) NSArray *noSimultaneousPanningViewClasses;
 
@@ -100,10 +104,10 @@
 // Default: NO
 @property (nonatomic, assign, getter = isRightViewControllerEnabled) BOOL rightViewControllerEnabled;
 
-// returns YES if the left view controller is fully visible and panning has ended
+// returns YES if the left view controller is fully visible and panning has ended.
 @property (nonatomic, readonly, getter = isLeftViewControllerVisible) BOOL leftViewControllerVisible;
 
-// returns YES if the right view controller is fully visible and panning has ended
+// returns YES if the right view controller is fully visible and panning has ended.
 @property (nonatomic, readonly, getter = isRightViewControllerVisible) BOOL rightViewControllerVisible;
 
 @property (nonatomic, weak) id <MTStackViewControllerDelegate> delegate;

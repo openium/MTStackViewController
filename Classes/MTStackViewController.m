@@ -141,10 +141,16 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
         _leftViewControllerEnabled = YES;
         _rightViewControllerEnabled = NO;
         
+        _rasterizesViewsDuringAnimation = YES;
+        
         [self setSlideOffset:roundf(CGRectGetWidth([[UIScreen mainScreen] bounds]) * 0.8f)];
         _leftContainerView = [[MTStackContainerView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
         _rightContainerView = [[MTStackContainerView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
         _contentContainerView = [[MTStackContentContainerView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+        
+        [[_contentContainerView layer] setRasterizationScale:[[UIScreen mainScreen] scale]];
+        [[_leftContainerView layer] setRasterizationScale:[[UIScreen mainScreen] scale]];
+        [[_rightContainerView layer] setRasterizationScale:[[UIScreen mainScreen] scale]];
         
         UIView *transitionView = [[UIView alloc] initWithFrame:[_contentContainerView bounds]];
         [_contentContainerView addSubview:transitionView];
@@ -588,6 +594,13 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
         
         [self setShadowOffset:CGSizeMake(-1.0f, 0.0f)];
         
+        if ([self rasterizesViewsDuringAnimation])
+        {
+            [[_contentContainerView layer] setShouldRasterize:YES];
+            [[_leftContainerView layer] setShouldRasterize:YES];
+            [[_rightContainerView layer] setShouldRasterize:YES];
+        }
+        
         [UIView animateWithDuration:animated ? [self slideAnimationDuration] : 0.0f
                               delay:0.0f
                             options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState
@@ -606,6 +619,13 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
                              [[_contentContainerView layer] setShadowOpacity:[self minShadowOpacity]];
                              
                          } completion:^(BOOL finished) {
+                             
+                             if ([self rasterizesViewsDuringAnimation])
+                             {
+                                 [[_contentContainerView layer] setShouldRasterize:NO];
+                                 [[_leftContainerView layer] setShouldRasterize:NO];
+                                 [[_rightContainerView layer] setShouldRasterize:NO];
+                             }
                              
                              [self setContentViewUserInteractionEnabled:NO];
                              [_contentContainerView addGestureRecognizer:_tapGestureRecognizer];
@@ -633,6 +653,13 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
         
         [self setShadowOffset:CGSizeMake(1.0f, 0.0f)];
         
+        if ([self rasterizesViewsDuringAnimation])
+        {
+            [[_contentContainerView layer] setShouldRasterize:YES];
+            [[_leftContainerView layer] setShouldRasterize:YES];
+            [[_rightContainerView layer] setShouldRasterize:YES];
+        }
+        
         [UIView animateWithDuration:animated ? [self slideAnimationDuration] : 0.0f
                               delay:0.0f
                             options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState
@@ -651,6 +678,13 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
                              [[_contentContainerView layer] setShadowOpacity:[self minShadowOpacity]];
                              
                          } completion:^(BOOL finished) {
+                             
+                             if ([self rasterizesViewsDuringAnimation])
+                             {
+                                 [[_contentContainerView layer] setShouldRasterize:NO];
+                                 [[_leftContainerView layer] setShouldRasterize:NO];
+                                 [[_rightContainerView layer] setShouldRasterize:NO];
+                             }
                              
                              [self setContentViewUserInteractionEnabled:NO];
                              [_contentContainerView addGestureRecognizer:_tapGestureRecognizer];
@@ -686,6 +720,13 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
 
 - (void)hideLeftOrRightViewControllerAnimated:(BOOL)animated
 {
+    if ([self rasterizesViewsDuringAnimation])
+    {
+        [[_contentContainerView layer] setShouldRasterize:YES];
+        [[_leftContainerView layer] setShouldRasterize:YES];
+        [[_rightContainerView layer] setShouldRasterize:YES];
+    }
+    
     [UIView animateWithDuration:animated ? [self slideAnimationDuration] : 0.0f
                           delay:0.0f
                         options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState
@@ -713,6 +754,13 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
                          
                          
                      } completion:^(BOOL finished) {
+                         
+                         if ([self rasterizesViewsDuringAnimation])
+                         {
+                             [[_contentContainerView layer] setShouldRasterize:NO];
+                             [[_leftContainerView layer] setShouldRasterize:NO];
+                             [[_rightContainerView layer] setShouldRasterize:NO];
+                         }
                          
                          [self setContentViewUserInteractionEnabled:YES];
                          [_contentContainerView removeGestureRecognizer:_tapGestureRecognizer];
@@ -849,6 +897,12 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
             break;
         case UIGestureRecognizerStateBegan:
         {
+            if ([self rasterizesViewsDuringAnimation])
+            {
+                [[_contentContainerView layer] setShouldRasterize:YES];
+                [[_leftContainerView layer] setShouldRasterize:YES];
+                [[_rightContainerView layer] setShouldRasterize:YES];
+            }
             _initialPanGestureLocation = [panGestureRecognizer locationInView:[self view]];
             _initialContentControllerFrame = [_contentContainerView frame];
             id <MTStackChildViewController> controller = [self stackChildViewControllerForViewController:[self contentViewController]];
