@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "MTStackViewController"
-  s.version      = "0.0.3"
+  s.version      = "0.0.4"
   s.summary      = "A container view controller which provides Facebook / Path style navigation."
   s.homepage     = "https://github.com/willowtreeapps/MTStackViewController"
   s.license      = 'Commercial'
