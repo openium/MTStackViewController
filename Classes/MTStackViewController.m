@@ -823,7 +823,12 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     if ([contentViewController isKindOfClass:[UINavigationController class]])
     {
         UINavigationController *navigationController = (UINavigationController *)contentViewController;
-        if ([[navigationController viewControllers] count])
+    
+        if ([[navigationController viewControllers] count] > 1 && [self disableNavigationBarUserInterationWhenDrilledDown])
+        {
+            [[navigationController view] setUserInteractionEnabled:userInteractionEnabled];
+        }
+        else if ([[navigationController viewControllers] count])
         {
             UIViewController *currentViewController = [[navigationController viewControllers] lastObject];
             [[currentViewController view] setUserInteractionEnabled:userInteractionEnabled];

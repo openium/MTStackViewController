@@ -110,6 +110,10 @@
 // returns YES if the right view controller is fully visible and panning has ended.
 @property (nonatomic, readonly, getter = isRightViewControllerVisible) BOOL rightViewControllerVisible;
 
+// When drilled into a UINavigationController and exposing the menus, user interaction will be disabled to prevent bar button item presses
+// Default: NO
+@property (nonatomic, assign) BOOL disableNavigationBarUserInterationWhenDrilledDown;
+
 @property (nonatomic, weak) id <MTStackViewControllerDelegate> delegate;
 
 // Sets the contentViewController, and will optionally hide the left view controller if it is visible.
