@@ -937,36 +937,4 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     }
 }
 
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
-{
-    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
-}
-
-- (NSUInteger)supportedInterfaceOrientations
-{
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
-        return UIInterfaceOrientationMaskPortrait;
-    else
-        return UIInterfaceOrientationMaskAll;
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
-        return UIInterfaceOrientationIsPortrait(interfaceOrientation);
-    else
-        return YES;
-}
-
-- (BOOL)shouldAutorotate
-{
-    return YES;
-}
-
-- (BOOL)automaticallyForwardAppearanceAndRotationMethodsToChildViewControllers
-{
-    return YES;
-}
-
-
 @end
