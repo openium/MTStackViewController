@@ -140,6 +140,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     {
         _leftViewControllerEnabled = YES;
         _rightViewControllerEnabled = NO;
+        _leftControllerParallaxEnabled = YES;
         
         _rasterizesViewsDuringAnimation = YES;
         
@@ -193,7 +194,11 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     [view setAutoresizesSubviews:YES];
     [view setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin];
     
-    [_leftContainerView setFrame:CGRectMake(-([self slideOffset] / 4.0f),
+    CGFloat leftContainerOriginX = 0.0;
+    if (_leftControllerParallaxEnabled)
+        leftContainerOriginX = -([self slideOffset] / 4.0f);
+    
+    [_leftContainerView setFrame:CGRectMake(leftContainerOriginX,
                                             CGRectGetMinY([_leftContainerView frame]),
                                             CGRectGetWidth([view bounds]),
                                             CGRectGetHeight([view bounds]))];
@@ -527,7 +532,9 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
                              CGFloat containerX = 0.0f;
                              if (containerView == _leftContainerView)
                              {
-                                 containerX = (-([self slideOffset] / 4.0f)) + (percentRevealed * ([self slideOffset] / 4.0f));
+                                 if (_leftControllerParallaxEnabled)
+                                     containerX = (-([self slideOffset] / 4.0f)) + (percentRevealed * ([self slideOffset] / 4.0f));
+                                 
                                  [self setShadowOffset:CGSizeMake(-1.0f, 0.0f)];
                              }
                              else
@@ -736,8 +743,14 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
                                                                     CGRectGetMinY([_contentContainerView frame]),
                                                                     CGRectGetWidth([_contentContainerView frame]),
                                                                     CGRectGetHeight([_contentContainerView frame]))];
+                         
+                         CGFloat newLeftContainerOffset = 0.0;
+                         
+                         if (_leftControllerParallaxEnabled)
+                             newLeftContainerOffset = -([self slideOffset] / 4.0f);
+                         
                          [[_leftContainerView overlayView] setAlpha:0.7f];
-                         [_leftContainerView setFrame:CGRectMake(-([self slideOffset] / 4.0f),
+                         [_leftContainerView setFrame:CGRectMake(newLeftContainerOffset,
                                                                  CGRectGetMinY([_leftContainerView frame]),
                                                                  CGRectGetWidth([_leftContainerView frame]),
                                                                  CGRectGetHeight([_leftContainerView frame]))];
@@ -923,5 +936,37 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
             break;
     }
 }
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+}
+
+- (NSUInteger)supportedInterfaceOrientations
+{
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+        return UIInterfaceOrientationMaskPortrait;
+    else
+        return UIInterfaceOrientationMaskAll;
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+        return UIInterfaceOrientationIsPortrait(interfaceOrientation);
+    else
+        return YES;
+}
+
+- (BOOL)shouldAutorotate
+{
+    return YES;
+}
+
+- (BOOL)automaticallyForwardAppearanceAndRotationMethodsToChildViewControllers
+{
+    return YES;
+}
+
 
 @end

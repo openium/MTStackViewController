@@ -96,6 +96,10 @@
 // Default: nil
 @property (nonatomic, copy) NSArray *noSimultaneousPanningViewClasses;
 
+// Enable parallax of left view controller
+// Defaults: YES
+@property (nonatomic, assign, getter = isLeftControllerParallaxEnabled) BOOL leftControllerParallaxEnabled;
+
 // Enables panning to reveal the left view controller.
 // Default: YES
 @property (nonatomic, assign, getter = isLeftViewControllerEnabled) BOOL leftViewControllerEnabled;
