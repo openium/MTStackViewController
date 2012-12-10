@@ -218,6 +218,21 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
 
 #pragma mark - Accessors
 
+- (UIView *)contentContainerView
+{
+    return _contentContainerView;
+}
+
+- (UIView *)leftContainerView
+{
+    return _leftContainerView;
+}
+
+- (UIView *)rightContainerView
+{
+    return _rightContainerView;
+}
+
 - (void)setNoSimultaneousPanningViewClasses:(NSArray *)noSimultaneousPanningViewClasses
 {
     _noSimultaneousPanningViewClasses = [noSimultaneousPanningViewClasses copy];

@@ -120,6 +120,11 @@
 
 @property (nonatomic, weak) id <MTStackViewControllerDelegate> delegate;
 
+// UIViews which the controller's views are placed in/
+@property (nonatomic, readonly) UIView *contentContainerView;
+@property (nonatomic, readonly) UIView *leftContainerView;
+@property (nonatomic, readonly) UIView *rightContainerView;
+
 // Sets the contentViewController, and will optionally hide the left view controller if it is visible.
 // DEPRECATED - use setContentViewController:snapToContentViewController:animated:
 - (void)setContentViewController:(UIViewController *)contentViewController hideLeftViewController:(BOOL)hideLeftViewController animated:(BOOL)animated __deprecated;
