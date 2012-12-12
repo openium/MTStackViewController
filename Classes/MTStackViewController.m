@@ -63,10 +63,10 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     if (self)
     {
         [self setAutoresizesSubviews:YES];
-        [self setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin];
+        [self setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
         
         _overlayView = [[UIView alloc] initWithFrame:[self bounds]];
-        [[self overlayView] setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin];
+        [[self overlayView] setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
         [[self overlayView] setAlpha:1.0f];
         [self addSubview:_overlayView];
     }
@@ -96,7 +96,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     self = [super initWithFrame:frame];
     if (self)
     {
-        [self setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin];
+        [self setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
         [self setAutoresizesSubviews:YES];
     }
     return self;
@@ -138,22 +138,25 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     
     if (self)
     {
+        CGRect screenBounds = [self screenBounds];
+        
         _leftViewControllerEnabled = YES;
         _rightViewControllerEnabled = NO;
         _leftControllerParallaxEnabled = YES;
-        
+        _leftSnapThreshold = screenBounds.size.width / 2.0f;
         _rasterizesViewsDuringAnimation = YES;
         
-        [self setSlideOffset:roundf(CGRectGetWidth([[UIScreen mainScreen] bounds]) * 0.8f)];
-        _leftContainerView = [[MTStackContainerView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-        _rightContainerView = [[MTStackContainerView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-        _contentContainerView = [[MTStackContentContainerView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+        [self setSlideOffset:roundf(screenBounds.size.width * 0.8f)];
+        
+        _leftContainerView = [[MTStackContainerView alloc] initWithFrame:screenBounds];
+        _rightContainerView = [[MTStackContainerView alloc] initWithFrame:screenBounds];
+        _contentContainerView = [[MTStackContentContainerView alloc] initWithFrame:screenBounds];
         
         [[_contentContainerView layer] setRasterizationScale:[[UIScreen mainScreen] scale]];
         [[_leftContainerView layer] setRasterizationScale:[[UIScreen mainScreen] scale]];
         [[_rightContainerView layer] setRasterizationScale:[[UIScreen mainScreen] scale]];
         
-        UIView *transitionView = [[UIView alloc] initWithFrame:[_contentContainerView bounds]];
+        UIView *transitionView = [[UIView alloc] initWithFrame:screenBounds];
         [_contentContainerView addSubview:transitionView];
         
         [_leftContainerView setBackgroundColor:[UIColor whiteColor]];
@@ -182,56 +185,45 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
 
 - (void)loadView
 {
-    CGRect frame = [[UIScreen mainScreen] bounds];
+    CGRect frame = [self screenBounds];
     
     if (![[UIApplication sharedApplication] isStatusBarHidden])
     {
         CGRect statusBarFrame = [[UIApplication sharedApplication] statusBarFrame];
-        frame.origin.y = statusBarFrame.size.height;
-        frame.size.height -= statusBarFrame.size.height;
+        
+        if (UIInterfaceOrientationIsLandscape([self interfaceOrientation]))
+            statusBarFrame.size = CGSizeMake(statusBarFrame.size.height, statusBarFrame.size.height);
+        
+        statusBarFrame.origin.y = statusBarFrame.size.height;
+        statusBarFrame.size.height -= statusBarFrame.size.height;
     }
+    
     UIView *view = [[UIView alloc] initWithFrame:frame];
     [view setAutoresizesSubviews:YES];
-    [view setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin];
-    
+    [view setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
+
     CGFloat leftContainerOriginX = 0.0;
     if (_leftControllerParallaxEnabled)
         leftContainerOriginX = -([self slideOffset] / 4.0f);
     
     [_leftContainerView setFrame:CGRectMake(leftContainerOriginX,
-                                            CGRectGetMinY([_leftContainerView frame]),
+                                            0.0,
                                             CGRectGetWidth([view bounds]),
                                             CGRectGetHeight([view bounds]))];
     [view addSubview:_leftContainerView];
-    
+
     [_rightContainerView setFrame:CGRectMake((CGRectGetWidth([view frame]) - [self slideOffset]) + ((CGRectGetWidth([view frame]) - [self slideOffset]) / 4.0f),
-                                             CGRectGetMinY([_rightContainerView frame]),
+                                             0.0,
                                              CGRectGetWidth([view bounds]),
                                              CGRectGetHeight([view bounds]))];
     [view addSubview:_rightContainerView];
     [_contentContainerView setFrame:[view bounds]];
     [view addSubview:_contentContainerView];
     
-    
     [self setView:view];
 }
 
 #pragma mark - Accessors
-
-- (UIView *)contentContainerView
-{
-    return _contentContainerView;
-}
-
-- (UIView *)leftContainerView
-{
-    return _leftContainerView;
-}
-
-- (UIView *)rightContainerView
-{
-    return _rightContainerView;
-}
 
 - (void)setNoSimultaneousPanningViewClasses:(NSArray *)noSimultaneousPanningViewClasses
 {
@@ -584,7 +576,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
 
 - (void)snapContentViewController
 {
-    if (CGRectGetMinX([_contentContainerView frame]) <= CGRectGetWidth([_contentContainerView frame]) / 2.0f && CGRectGetMinX([_contentContainerView frame]) >= 0.0f)
+    if (CGRectGetMinX([_contentContainerView frame]) <= _leftSnapThreshold && CGRectGetMinX([_contentContainerView frame]) >= 0.0f)
     {
         [self hideLeftViewControllerAnimated:YES];
     }
@@ -915,6 +907,15 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     return shouldPan;
 }
 
+- (CGRect)screenBounds
+{
+    CGRect screenBounds = [[UIScreen mainScreen] bounds];
+    if (UIInterfaceOrientationIsLandscape([self interfaceOrientation]))
+        screenBounds.size = CGSizeMake(screenBounds.size.height, screenBounds.size.width);
+    
+    return screenBounds;
+}
+
 - (void)contentContainerView:(MTStackContentContainerView *)view panGestureRecognizerDidPan:(UIPanGestureRecognizer *)panGestureRecognizer
 {
     switch ([panGestureRecognizer state]) {
@@ -950,6 +951,32 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
         default:
             break;
     }
+}
+
+// Defaults to portrait only, subclass and override these methods, if you want to support landscape
+// Also make sure your content view controller overrides these methods to support registration, so it resizes correctly
+// for UINavigationController, the autoresizing mask needs to be flexible width and height (may need to be set in viewWillAppear:)
+
+#pragma mark - Support Rotation
+
+- (NSUInteger)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    return UIInterfaceOrientationIsPortrait(interfaceOrientation);
+}
+
+- (BOOL)shouldAutorotate
+{
+    return NO;
+}
+
+- (BOOL)automaticallyForwardAppearanceAndRotationMethodsToChildViewControllers
+{
+    return NO;
 }
 
 @end

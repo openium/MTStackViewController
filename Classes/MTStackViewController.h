@@ -80,6 +80,10 @@
 // Default: [UIColor blackColor]
 @property (nonatomic, copy) UIColor *shadowColor;
 
+// The position at which the content view controller hides/closes the left controller
+// Default: Half the size of the content view controller
+@property (nonatomic, assign) CGFloat leftSnapThreshold;
+
 // Rasterizes views during animation when set to YES. Imporoves general performance.
 // Default: YES
 @property (nonatomic, assign) BOOL rasterizesViewsDuringAnimation;
@@ -119,11 +123,6 @@
 @property (nonatomic, assign) BOOL disableNavigationBarUserInterationWhenDrilledDown;
 
 @property (nonatomic, weak) id <MTStackViewControllerDelegate> delegate;
-
-// UIViews which the controller's views are placed in/
-@property (nonatomic, readonly) UIView *contentContainerView;
-@property (nonatomic, readonly) UIView *leftContainerView;
-@property (nonatomic, readonly) UIView *rightContainerView;
 
 // Sets the contentViewController, and will optionally hide the left view controller if it is visible.
 // DEPRECATED - use setContentViewController:snapToContentViewController:animated:
