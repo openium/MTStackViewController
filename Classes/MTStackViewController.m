@@ -201,7 +201,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     UIView *view = [[UIView alloc] initWithFrame:frame];
     [view setAutoresizesSubviews:YES];
     [view setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
-
+    
     CGFloat leftContainerOriginX = 0.0;
     if (_leftControllerParallaxEnabled)
         leftContainerOriginX = -([self slideOffset] / 4.0f);
@@ -211,7 +211,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
                                             CGRectGetWidth([view bounds]),
                                             CGRectGetHeight([view bounds]))];
     [view addSubview:_leftContainerView];
-
+    
     [_rightContainerView setFrame:CGRectMake((CGRectGetWidth([view frame]) - [self slideOffset]) + ((CGRectGetWidth([view frame]) - [self slideOffset]) / 4.0f),
                                              0.0,
                                              CGRectGetWidth([view bounds]),
@@ -843,7 +843,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     if ([contentViewController isKindOfClass:[UINavigationController class]])
     {
         UINavigationController *navigationController = (UINavigationController *)contentViewController;
-    
+        
         if ([[navigationController viewControllers] count] > 1 && [self disableNavigationBarUserInterationWhenDrilledDown])
         {
             [[navigationController view] setUserInteractionEnabled:userInteractionEnabled];
@@ -897,11 +897,20 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
 {
     BOOL shouldPan = YES;
     
-    id <MTStackChildViewController> navigationChild = [self stackChildViewControllerForViewController:[self contentViewController]];
-    
-    if (navigationChild)
+    if ([self disableSwipeWhenContentNavigationControllerDrilledDown] &&
+        [_contentViewController isKindOfClass:[UINavigationController class]] &&
+        [[(UINavigationController *)_contentViewController viewControllers] count] > 1)
     {
-        shouldPan = [navigationChild shouldAllowPanning];
+        shouldPan = NO;
+    }
+    else
+    {
+        id <MTStackChildViewController> navigationChild = [self stackChildViewControllerForViewController:[self contentViewController]];
+        
+        if (navigationChild)
+        {
+            shouldPan = [navigationChild shouldAllowPanning];
+        }
     }
     
     return shouldPan;
@@ -970,11 +979,6 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
 }
 
 - (BOOL)shouldAutorotate
-{
-    return NO;
-}
-
-- (BOOL)automaticallyForwardAppearanceAndRotationMethodsToChildViewControllers
 {
     return NO;
 }

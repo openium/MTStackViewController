@@ -122,6 +122,10 @@
 // Default: NO
 @property (nonatomic, assign) BOOL disableNavigationBarUserInterationWhenDrilledDown;
 
+// When set to YES, if the content view controller is a UINavigationController who has > 1 view controller, swiping will be disabled.
+// Default: NO
+@property (nonatomic, assign) BOOL disableSwipeWhenContentNavigationControllerDrilledDown;
+
 @property (nonatomic, weak) id <MTStackViewControllerDelegate> delegate;
 
 // Sets the contentViewController, and will optionally hide the left view controller if it is visible.
