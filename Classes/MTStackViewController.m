@@ -132,55 +132,72 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
 
 #pragma mark - UIViewController Overrides
 
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+	self = [super initWithCoder:aDecoder];
+	
+	if (self)
+	{
+		[self setup];
+	}
+	
+	return self;
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     
     if (self)
     {
-        CGRect screenBounds = [self screenBounds];
-        
-        _leftViewControllerEnabled = YES;
-        _rightViewControllerEnabled = NO;
-        _leftControllerParallaxEnabled = YES;
-        _leftSnapThreshold = screenBounds.size.width / 2.0f;
-        _rasterizesViewsDuringAnimation = YES;
-        
-        [self setSlideOffset:roundf(screenBounds.size.width * 0.8f)];
-        
-        _leftContainerView = [[MTStackContainerView alloc] initWithFrame:screenBounds];
-        _rightContainerView = [[MTStackContainerView alloc] initWithFrame:screenBounds];
-        _contentContainerView = [[MTStackContentContainerView alloc] initWithFrame:screenBounds];
-        
-        [[_contentContainerView layer] setRasterizationScale:[[UIScreen mainScreen] scale]];
-        [[_leftContainerView layer] setRasterizationScale:[[UIScreen mainScreen] scale]];
-        [[_rightContainerView layer] setRasterizationScale:[[UIScreen mainScreen] scale]];
-        
-        UIView *transitionView = [[UIView alloc] initWithFrame:screenBounds];
-        [_contentContainerView addSubview:transitionView];
-        
-        [_leftContainerView setBackgroundColor:[UIColor whiteColor]];
-        [_rightContainerView setBackgroundColor:[UIColor whiteColor]];
-        [_contentContainerView setBackgroundColor:[UIColor whiteColor]];
-        
-        _tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureRecognizerDidTap:)];
-        
-        _panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureRecognizerDidPan:)];
-        [_panGestureRecognizer setCancelsTouchesInView:YES];
-        [_panGestureRecognizer setDelegate:self];
-        [_contentContainerView addGestureRecognizer:_panGestureRecognizer];
-        
-        [self setSlideAnimationDuration:0.3f];
-        [self setMinShadowRadius:3.0f];
-        [self setMaxShadowRadius:10.0f];
-        [self setMinShadowOpacity:0.5f];
-        [self setMaxShadowOpacity:1.0f];
-        [self setShadowOffset:CGSizeZero];
-        [self setShadowColor:[UIColor blackColor]];
-        [self setLeftViewControllerOverlayColor:[UIColor blackColor]];
-        [self setRightViewControllerOverlayColor:[UIColor blackColor]];
+		[self setup];
     }
     return self;
+}
+
+- (void)setup
+{
+    CGRect screenBounds = [self screenBounds];
+    
+    _leftViewControllerEnabled = YES;
+    _rightViewControllerEnabled = NO;
+    _leftControllerParallaxEnabled = YES;
+    _leftSnapThreshold = screenBounds.size.width / 2.0f;
+    _rasterizesViewsDuringAnimation = YES;
+    
+    [self setSlideOffset:roundf(screenBounds.size.width * 0.8f)];
+    
+    _leftContainerView = [[MTStackContainerView alloc] initWithFrame:screenBounds];
+    _rightContainerView = [[MTStackContainerView alloc] initWithFrame:screenBounds];
+    _contentContainerView = [[MTStackContentContainerView alloc] initWithFrame:screenBounds];
+    
+    [[_contentContainerView layer] setRasterizationScale:[[UIScreen mainScreen] scale]];
+    [[_leftContainerView layer] setRasterizationScale:[[UIScreen mainScreen] scale]];
+    [[_rightContainerView layer] setRasterizationScale:[[UIScreen mainScreen] scale]];
+    
+    UIView *transitionView = [[UIView alloc] initWithFrame:screenBounds];
+    [_contentContainerView addSubview:transitionView];
+    
+    [_leftContainerView setBackgroundColor:[UIColor whiteColor]];
+    [_rightContainerView setBackgroundColor:[UIColor whiteColor]];
+    [_contentContainerView setBackgroundColor:[UIColor whiteColor]];
+    
+    _tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureRecognizerDidTap:)];
+    
+    _panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureRecognizerDidPan:)];
+    [_panGestureRecognizer setCancelsTouchesInView:YES];
+    [_panGestureRecognizer setDelegate:self];
+    [_contentContainerView addGestureRecognizer:_panGestureRecognizer];
+    
+    [self setSlideAnimationDuration:0.3f];
+    [self setMinShadowRadius:3.0f];
+    [self setMaxShadowRadius:10.0f];
+    [self setMinShadowOpacity:0.5f];
+    [self setMaxShadowOpacity:1.0f];
+    [self setShadowOffset:CGSizeZero];
+    [self setShadowColor:[UIColor blackColor]];
+    [self setLeftViewControllerOverlayColor:[UIColor blackColor]];
+    [self setRightViewControllerOverlayColor:[UIColor blackColor]];
 }
 
 - (void)loadView
