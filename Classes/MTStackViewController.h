@@ -12,6 +12,8 @@
 #import <UIKit/UIKit.h>
 
 @class MTStackViewController;
+@class MTStackContainerView;
+@class MTStackContentContainerView;
 
 @protocol MTStackViewControllerDelegate <NSObject>
 
@@ -55,6 +57,11 @@
 // How long the animation should take between states.
 // Default: 0.3f
 @property (nonatomic, assign) CGFloat slideAnimationDuration;
+
+// Whether the reveal or hide animation duration speeds up if the content controller is
+// partially closed
+// Default: NO
+@property (nonatomic, assign) BOOL animationDurationProportionalToPosition;
 
 // Minimum shadow radius for the content controller's view.
 // Default: 3.0f

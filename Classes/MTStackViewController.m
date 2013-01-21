@@ -423,6 +423,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
 {
     BOOL shouldBegin = [self contentContainerView:_contentContainerView panGestureRecognizerShouldPan:(UIPanGestureRecognizer *)gestureRecognizer];
+
     return shouldBegin;
 }
 
@@ -632,7 +633,20 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
             [[_rightContainerView layer] setShouldRasterize:YES];
         }
         
-        [UIView animateWithDuration:animated ? [self slideAnimationDuration] : 0.0f
+        NSTimeInterval animationDuration = 0.0;
+        
+        if (animated)
+        {
+            if (_animationDurationProportionalToPosition)
+            {
+                animationDuration = [self slideAnimationDuration] * ([self slideOffset] - _contentContainerView.frame.origin.x) / [self slideOffset];
+                animationDuration = MAX(animationDuration, 0.1);
+            }
+            else
+                animationDuration = [self slideAnimationDuration];
+        }
+        
+        [UIView animateWithDuration:animationDuration
                               delay:0.0f
                             options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState
                          animations:^{
@@ -758,7 +772,20 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
         [[_rightContainerView layer] setShouldRasterize:YES];
     }
     
-    [UIView animateWithDuration:animated ? [self slideAnimationDuration] : 0.0f
+    NSTimeInterval animationDuration = 0.0;
+    
+    if (animated)
+    {
+        if (_animationDurationProportionalToPosition)
+        {
+            animationDuration = [self slideAnimationDuration] * _contentContainerView.frame.origin.x / [self slideOffset];
+            animationDuration = MAX(0.1, animationDuration);
+        }
+        else
+            animationDuration = [self slideAnimationDuration];
+    }
+    
+    [UIView animateWithDuration:animationDuration
                           delay:0.0f
                         options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState
                      animations:^{
