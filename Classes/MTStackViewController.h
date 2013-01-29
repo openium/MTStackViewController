@@ -48,15 +48,28 @@
 // Default: nil
 @property (nonatomic, strong) UIViewController *contentViewController;
 
+// Represends the left header view above the left view controller
+// Default: nil
+@property (nonatomic, strong) UIView *leftHeaderView;
+
 // How far the content controller's X coordinate should be from point 0.0f (left to right)
 // before the left controller should be considered revealed. This will automatically be
 // converted for the right controller.
 // Default: 80% of [UIScreen mainScreen]'s width.
 @property (nonatomic, assign) CGFloat slideOffset;
 
+// How far the left header's x origin should be before the parallax animation is started
+@property (nonatomic, assign) CGFloat headerSlideOffset;
+
 // How long the animation should take between states.
 // Default: 0.3f
 @property (nonatomic, assign) CGFloat slideAnimationDuration;
+
+// How long the animation should take when a pan gesture is recognized.
+// This animation is used when a horizontal pan gesture is detected to make the content view
+// animate to the new offset
+// Default: 0.05f
+@property (nonatomic, assign) CGFloat trackingAnimationDuration;
 
 // Whether the reveal or hide animation duration speeds up if the content controller is
 // partially closed

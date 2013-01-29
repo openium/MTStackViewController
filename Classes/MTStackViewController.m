@@ -116,6 +116,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
 @interface MTStackViewController ()
 {
     MTStackContainerView *_leftContainerView;
+    MTStackContainerView *_leftHeaderView;
     MTStackContainerView *_rightContainerView;
     MTStackContentContainerView *_contentContainerView;
     CGPoint _initialPanGestureLocation;
@@ -166,11 +167,14 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     _rasterizesViewsDuringAnimation = YES;
     
     [self setSlideOffset:roundf(screenBounds.size.width * 0.8f)];
+    [self setHeaderSlideOffset:[self slideOffset] *0.5];
     
     _leftContainerView = [[MTStackContainerView alloc] initWithFrame:screenBounds];
+    _leftHeaderView = [[MTStackContainerView alloc] initWithFrame:CGRectZero];
     _rightContainerView = [[MTStackContainerView alloc] initWithFrame:screenBounds];
     _contentContainerView = [[MTStackContentContainerView alloc] initWithFrame:screenBounds];
     
+    [[_leftHeaderView layer] setRasterizationScale:[[UIScreen mainScreen] scale]];
     [[_contentContainerView layer] setRasterizationScale:[[UIScreen mainScreen] scale]];
     [[_leftContainerView layer] setRasterizationScale:[[UIScreen mainScreen] scale]];
     [[_rightContainerView layer] setRasterizationScale:[[UIScreen mainScreen] scale]];
@@ -178,6 +182,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     UIView *transitionView = [[UIView alloc] initWithFrame:screenBounds];
     [_contentContainerView addSubview:transitionView];
     
+    [_leftHeaderView setBackgroundColor:[UIColor whiteColor]];
     [_leftContainerView setBackgroundColor:[UIColor whiteColor]];
     [_rightContainerView setBackgroundColor:[UIColor whiteColor]];
     [_contentContainerView setBackgroundColor:[UIColor whiteColor]];
@@ -190,6 +195,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     [_contentContainerView addGestureRecognizer:_panGestureRecognizer];
     
     [self setSlideAnimationDuration:0.3f];
+    [self setTrackingAnimationDuration:0.05f];
     [self setMinShadowRadius:3.0f];
     [self setMaxShadowRadius:10.0f];
     [self setMinShadowOpacity:0.5f];
@@ -198,22 +204,14 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     [self setShadowColor:[UIColor blackColor]];
     [self setLeftViewControllerOverlayColor:[UIColor blackColor]];
     [self setRightViewControllerOverlayColor:[UIColor blackColor]];
+    [[_leftHeaderView overlayView] setBackgroundColor:[UIColor blackColor]];
 }
 
 - (void)loadView
 {
-    CGRect frame = [self screenBounds];
-    
-    if (![[UIApplication sharedApplication] isStatusBarHidden])
-    {
-        CGRect statusBarFrame = [[UIApplication sharedApplication] statusBarFrame];
-        
-        if (UIInterfaceOrientationIsLandscape([self interfaceOrientation]))
-            statusBarFrame.size = CGSizeMake(statusBarFrame.size.height, statusBarFrame.size.height);
-        
-        statusBarFrame.origin.y = statusBarFrame.size.height;
-        statusBarFrame.size.height -= statusBarFrame.size.height;
-    }
+    CGRect frame = [[UIScreen mainScreen] bounds];
+    CGRect statusBarFrame = [[UIApplication sharedApplication] statusBarFrame];
+    frame.size.height -= MIN(statusBarFrame.size.width, statusBarFrame.size.height);
     
     UIView *view = [[UIView alloc] initWithFrame:frame];
     [view setAutoresizesSubviews:YES];
@@ -223,10 +221,17 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     if (_leftControllerParallaxEnabled)
         leftContainerOriginX = -([self slideOffset] / 4.0f);
     
+    _leftHeaderView.frame = CGRectMake(-[self headerSlideOffset],
+                                       0,
+                                       CGRectGetWidth(_leftHeaderView.frame),
+                                       CGRectGetHeight(_leftHeaderView.frame));
+    
+    [view addSubview:_leftHeaderView];
+    
     [_leftContainerView setFrame:CGRectMake(leftContainerOriginX,
-                                            0.0,
+                                            CGRectGetMaxY([_leftHeaderView frame]),
                                             CGRectGetWidth([view bounds]),
-                                            CGRectGetHeight([view bounds]))];
+                                            CGRectGetHeight([view bounds]) - CGRectGetMaxY([_leftHeaderView frame]))];
     [view addSubview:_leftContainerView];
     
     [_rightContainerView setFrame:CGRectMake((CGRectGetWidth([view frame]) - [self slideOffset]) + ((CGRectGetWidth([view frame]) - [self slideOffset]) / 4.0f),
@@ -321,6 +326,34 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
 - (void)setRightViewController:(UIViewController *)rightViewController
 {
     [self setViewController:rightViewController position:MTStackViewControllerPositionRight];
+}
+
+- (void)setLeftHeaderView:(UIView*)leftHeaderView {
+    
+    for (UIView *view in [_leftHeaderView subviews]) {
+        if (![view isEqual:[_leftHeaderView overlayView]]) {
+            [view removeFromSuperview];
+        }
+    }
+    
+    [_leftHeaderView addSubview:leftHeaderView];
+    CGFloat leftHeaderX = -[self headerSlideOffset];
+    [_leftHeaderView setFrame:CGRectMake(leftHeaderX,
+                                         0,
+                                         CGRectGetWidth(leftHeaderView.frame),
+                                         CGRectGetHeight(leftHeaderView.frame))];
+
+    
+    [[_leftHeaderView overlayView] setFrame:CGRectMake(0,
+                                                       0,
+                                                       CGRectGetWidth(leftHeaderView.frame),
+                                                       CGRectGetHeight(leftHeaderView.frame) + [[UIApplication sharedApplication] statusBarFrame].size.height)];
+    
+    [_leftContainerView setFrame:CGRectMake(0,
+                                            CGRectGetMaxY(leftHeaderView.frame),
+                                            _leftContainerView.frame.size.width,
+                                            _leftContainerView.frame.size.height - CGRectGetMaxY(leftHeaderView.frame))];
+    
 }
 
 - (void)setViewController:(UIViewController *)newViewController position:(MTStackViewControllerPosition)position
@@ -541,7 +574,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
         ([self isRightViewControllerEnabled] && contentViewFrameX < 0.0f)
         )
     {
-        [UIView animateWithDuration:0.05f
+        [UIView animateWithDuration:[self trackingAnimationDuration]
                               delay:0.0f
                             options:UIViewAnimationOptionCurveLinear | UIViewAnimationOptionBeginFromCurrentState
                          animations:^{
@@ -561,6 +594,14 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
                                      containerX = (-([self slideOffset] / 4.0f)) + (percentRevealed * ([self slideOffset] / 4.0f));
                                  
                                  [self setShadowOffset:CGSizeMake(-1.0f, 0.0f)];
+                                 
+                                 CGFloat headerX = -[self headerSlideOffset] + (percentRevealed * [self headerSlideOffset]);
+                                 [_leftHeaderView setFrame:CGRectMake(headerX,
+                                                                      CGRectGetMinY([_leftHeaderView frame]),
+                                                                      CGRectGetWidth([_leftHeaderView frame]),
+                                                                      CGRectGetHeight([_leftHeaderView frame]))];
+                                 
+                                 [[_leftHeaderView overlayView] setAlpha:0.7f - (1.0f * fminf(percentRevealed, 0.7f))];
                              }
                              else
                              {
@@ -630,6 +671,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
         {
             [[_contentContainerView layer] setShouldRasterize:YES];
             [[_leftContainerView layer] setShouldRasterize:YES];
+            [[_leftHeaderView layer] setShouldRasterize:YES];
             [[_rightContainerView layer] setShouldRasterize:YES];
         }
         
@@ -655,6 +697,11 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
                                                                         CGRectGetMinY([_contentContainerView frame]),
                                                                         CGRectGetWidth([_contentContainerView frame]),
                                                                         CGRectGetHeight([_contentContainerView frame]))];
+                             [[_leftHeaderView overlayView] setAlpha:0.0f];
+                             [_leftHeaderView setFrame:CGRectMake(0,
+                                                                  CGRectGetMinY([_leftHeaderView frame]),
+                                                                  CGRectGetWidth([_leftHeaderView frame]),
+                                                                  CGRectGetHeight([_leftHeaderView frame]))];
                              [[_leftContainerView overlayView] setAlpha:0.0f];
                              [_leftContainerView setFrame:CGRectMake(0.0f,
                                                                      CGRectGetMinY([_leftContainerView frame]),
@@ -669,6 +716,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
                              {
                                  [[_contentContainerView layer] setShouldRasterize:NO];
                                  [[_leftContainerView layer] setShouldRasterize:NO];
+                                 [[_leftHeaderView layer] setShouldRasterize:NO];
                                  [[_rightContainerView layer] setShouldRasterize:NO];
                              }
                              
@@ -702,6 +750,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
         {
             [[_contentContainerView layer] setShouldRasterize:YES];
             [[_leftContainerView layer] setShouldRasterize:YES];
+            [[_leftHeaderView layer] setShouldRasterize:YES];
             [[_rightContainerView layer] setShouldRasterize:YES];
         }
         
@@ -728,6 +777,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
                              {
                                  [[_contentContainerView layer] setShouldRasterize:NO];
                                  [[_leftContainerView layer] setShouldRasterize:NO];
+                                 [[_leftHeaderView layer] setShouldRasterize:NO];
                                  [[_rightContainerView layer] setShouldRasterize:NO];
                              }
                              
@@ -769,6 +819,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     {
         [[_contentContainerView layer] setShouldRasterize:YES];
         [[_leftContainerView layer] setShouldRasterize:YES];
+        [[_leftHeaderView layer] setShouldRasterize:YES];
         [[_rightContainerView layer] setShouldRasterize:YES];
     }
     
@@ -806,6 +857,12 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
                                                                  CGRectGetWidth([_leftContainerView frame]),
                                                                  CGRectGetHeight([_leftContainerView frame]))];
                          
+                         [_leftHeaderView setFrame:CGRectMake(-[self headerSlideOffset],
+                                                              CGRectGetMinY([_leftHeaderView frame]),
+                                                              CGRectGetWidth([_leftHeaderView frame]),
+                                                              CGRectGetHeight([_leftHeaderView frame]))];
+                         [[_leftHeaderView overlayView] setAlpha:0.7f];
+                         
                          [[_rightContainerView overlayView] setAlpha:0.7f];
                          [_rightContainerView setFrame:CGRectMake((CGRectGetWidth([_contentContainerView bounds]) - [self slideOffset]) + ([self slideOffset] / 4.0f),
                                                                   CGRectGetMinY([_rightContainerView frame]),
@@ -823,6 +880,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
                          {
                              [[_contentContainerView layer] setShouldRasterize:NO];
                              [[_leftContainerView layer] setShouldRasterize:NO];
+                             [[_leftHeaderView layer] setShouldRasterize:NO];
                              [[_rightContainerView layer] setShouldRasterize:NO];
                          }
                          
@@ -988,6 +1046,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
             {
                 [[_contentContainerView layer] setShouldRasterize:YES];
                 [[_leftContainerView layer] setShouldRasterize:YES];
+                [[_leftHeaderView layer] setShouldRasterize:YES];
                 [[_rightContainerView layer] setShouldRasterize:YES];
             }
             _initialPanGestureLocation = [panGestureRecognizer locationInView:[self view]];
