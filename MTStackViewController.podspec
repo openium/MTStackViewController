@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
   s.version      = "0.0.11"
   s.summary      = "A container view controller which provides Facebook / Path style navigation."
   s.homepage     = "https://github.com/willowtreeapps/MTStackViewController"
-  s.license      = 'Commercial'
+  s.license      = 'MIT'
   s.author       = { "WillowTree Apps" => "" }
   s.source       = { :git => "git@github.com:willowtreeapps/MTStackViewController.git", :tag => s.version }
   s.source_files = 'Classes'
