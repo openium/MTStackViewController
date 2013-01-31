@@ -17,7 +17,6 @@ typedef enum
     MTStackViewControllerPositionRight
 } MTStackViewControllerPosition;
 
-// static CGFloat const MTSwipeVelocity = 1500.0f; // Not currently used
 const char *MTStackViewControllerKey = "MTStackViewControllerKey";
 
 #pragma mark - UIViewController VPStackNavigationController Additions
@@ -159,6 +158,8 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
 - (void)setup
 {
     CGRect screenBounds = [self screenBounds];
+    
+    _swipeVelocity = 500.0f;
     
     _leftViewControllerEnabled = YES;
     _rightViewControllerEnabled = NO;
@@ -342,7 +343,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
                                          0.0f,
                                          CGRectGetWidth([leftHeaderView frame]),
                                          CGRectGetHeight([leftHeaderView frame]))];
-
+    
     
     [[_leftHeaderView overlayView] setFrame:CGRectMake(0.0f,
                                                        0.0f,
@@ -456,7 +457,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
 {
     BOOL shouldBegin = [self contentContainerView:_contentContainerView panGestureRecognizerShouldPan:(UIPanGestureRecognizer *)gestureRecognizer];
-
+    
     return shouldBegin;
 }
 
@@ -679,10 +680,10 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
         
         if (animated)
         {
-            if (_animationDurationProportionalToPosition)
+            if ([self animationDurationProportionalToPosition])
             {
                 animationDuration = [self slideAnimationDuration] * ([self slideOffset] - [_contentContainerView frame].origin.x) / [self slideOffset];
-                animationDuration = MAX(animationDuration, 0.1f);
+                animationDuration = fmax(animationDuration, 0.15f);
             }
             else
                 animationDuration = [self slideAnimationDuration];
@@ -827,13 +828,15 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     
     if (animated)
     {
-        if (_animationDurationProportionalToPosition)
+        if ([self animationDurationProportionalToPosition])
         {
             animationDuration = [self slideAnimationDuration] * [_contentContainerView frame].origin.x / [self slideOffset];
-            animationDuration = MAX(0.1f, animationDuration);
+            animationDuration = fmax(0.15f, animationDuration);
         }
         else
+        {
             animationDuration = [self slideAnimationDuration];
+        }
     }
     
     [UIView animateWithDuration:animationDuration
@@ -1029,10 +1032,14 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
 
 - (void)contentContainerView:(MTStackContentContainerView *)view panGestureRecognizerDidPan:(UIPanGestureRecognizer *)panGestureRecognizer
 {
-    switch ([panGestureRecognizer state]) {
+    switch ([panGestureRecognizer state])
+    {
         case UIGestureRecognizerStateEnded:
         {
-            [self endPanning];
+            if (![self handleSwipe:panGestureRecognizer])
+            {
+                [self endPanning];
+            }
             id <MTStackChildViewController> controller = [self stackChildViewControllerForViewController:[self contentViewController]];
             if ([controller respondsToSelector:@selector(stackViewControllerDidEndPanning:)])
             {
@@ -1063,6 +1070,35 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
         default:
             break;
     }
+}
+
+- (BOOL)handleSwipe:(UIPanGestureRecognizer *)panGestureRecognizer
+{
+    CGFloat velocity = [panGestureRecognizer velocityInView:[self view]].x;
+    if (velocity >= [self swipeVelocity])
+    {
+        if (CGRectGetMinX([_contentContainerView frame]) > 0.0f)
+        {
+            [self revealLeftViewController];
+        }
+        else
+        {
+            [self revealRightViewController];
+        }
+    }
+    else if (velocity <= [self swipeVelocity] * -1.0f)
+    {
+        if (CGRectGetMinX([_contentContainerView frame]) < 0.0f)
+        {
+            [self hideLeftViewController];
+        }
+        else
+        {
+            [self hideRightViewController];
+        }
+    }
+    
+    return NO;
 }
 
 // Defaults to portrait only, subclass and override these methods, if you want to support landscape

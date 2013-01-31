@@ -120,6 +120,10 @@
 // Default: nil
 @property (nonatomic, copy) NSArray *noSimultaneousPanningViewClasses;
 
+// When the touch is moving at the velocity, count that as a swipe
+// Default: 500.0f;
+@property (nonatomic, assign) CGFloat swipeVelocity;
+
 // Enable parallax of left view controller
 // Defaults: YES
 @property (nonatomic, assign, getter = isLeftControllerParallaxEnabled) BOOL leftControllerParallaxEnabled;
