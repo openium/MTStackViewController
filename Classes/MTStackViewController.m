@@ -181,6 +181,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     _leftViewControllerEnabled = YES;
     _rightViewControllerEnabled = NO;
     _leftControllerParallaxEnabled = YES;
+    _rightControllerParallaxEnabled = YES;
     _leftSnapThreshold = screenBounds.size.width / 2.0f;
     _rasterizesViewsDuringAnimation = YES;
     
@@ -237,8 +238,9 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     
     CGFloat leftContainerOriginX = 0.0f;
     if (_leftControllerParallaxEnabled)
+    {
         leftContainerOriginX = -([self slideOffset] / 4.0f);
-    
+    }
     _leftHeaderView.frame = CGRectMake(-[self headerSlideOffset],
                                        0.0f,
                                        CGRectGetWidth([_leftHeaderView frame]),
@@ -609,7 +611,9 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
                              if (containerView == _leftContainerView)
                              {
                                  if (_leftControllerParallaxEnabled)
+                                 {
                                      containerX = (-([self slideOffset] / 4.0f)) + (percentRevealed * ([self slideOffset] / 4.0f));
+                                 }
                                  
                                  [self setShadowOffset:CGSizeMake(-1.0f, 0.0f)];
                                  
@@ -1100,18 +1104,18 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
         }
         else
         {
-            [self revealRightViewController];
+            [self hideRightViewController];
         }
     }
     else if (velocity <= [self swipeVelocity] * -1.0f)
     {
         if (CGRectGetMinX([_contentContainerView frame]) < 0.0f)
         {
-            [self hideLeftViewController];
+            [self revealRightViewController];
         }
         else
         {
-            [self hideRightViewController];
+            [self hideLeftViewController];
         }
     }
     

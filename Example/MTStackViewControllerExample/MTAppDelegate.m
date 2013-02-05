@@ -29,8 +29,8 @@
     [stackViewController setContentViewController:contentNavigationController];
     
     [[self window] setRootViewController:stackViewController];
-    
     [[self window] makeKeyAndVisible];
+    
     return YES;
 }
 

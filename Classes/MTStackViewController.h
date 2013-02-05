@@ -147,6 +147,10 @@
 // Defaults: YES
 @property (nonatomic, assign, getter = isLeftControllerParallaxEnabled) BOOL leftControllerParallaxEnabled;
 
+// Enable parallax of right view controller
+// Defaults: YES
+@property (nonatomic, assign, getter = isRightControllerParallaxEnabled) BOOL rightControllerParallaxEnabled;
+
 // Enables panning to reveal the left view controller.
 // Default: YES
 @property (nonatomic, assign, getter = isLeftViewControllerEnabled) BOOL leftViewControllerEnabled;
