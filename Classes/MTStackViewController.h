@@ -173,7 +173,16 @@
 // Default: NO
 @property (nonatomic, assign) BOOL disableSwipeWhenContentNavigationControllerDrilledDown;
 
+// Transition duration between changing content view controllers
+// Default: 0.0
+@property (nonatomic, assign) NSTimeInterval contentViewControllerAnimationDuration;
+
+// Animation option for setting content view controller
+// Default: 0
+@property (nonatomic, assign) NSInteger contentViewControllerAnimationOption;
+
 @property (nonatomic, weak) id <MTStackViewControllerDelegate> delegate;
+
 
 // Sets the contentViewController, and will optionally hide the left view controller if it is visible.
 // DEPRECATED - use setContentViewController:snapToContentViewController:animated:

@@ -506,7 +506,8 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
         
         if (currentContentViewController)
         {
-            [self transitionFromViewController:currentContentViewController toViewController:[self contentViewController] duration:0.0f options:0 animations:nil completion:^(BOOL finished) {
+            [self transitionFromViewController:currentContentViewController toViewController:[self contentViewController] duration:[self contentViewControllerAnimationDuration] options:[self contentViewControllerAnimationOption] animations:nil completion:^(BOOL finished) {
+                
                 [currentContentViewController removeFromParentViewController];
                 [currentContentViewController setStackViewController:nil];
                 if (snapToContentViewController)
