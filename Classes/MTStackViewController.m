@@ -852,7 +852,14 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     {
         if ([self animationDurationProportionalToPosition])
         {
-            animationDuration = [self slideAnimationDuration] * [_contentContainerView frame].origin.x / [self slideOffset];
+            if (CGRectGetMinX([_contentContainerView frame]) > 0.0f)
+            {
+                animationDuration = [self slideAnimationDuration] * (CGRectGetMinX([_contentContainerView frame]) / [self slideOffset]);
+            } 
+            else
+            {
+                animationDuration = [self slideAnimationDuration] * ((CGRectGetWidth([_contentContainerView bounds]) - CGRectGetMaxX([_contentContainerView frame])) / [self slideOffset]);
+            }
             animationDuration = fmax(0.15f, animationDuration);
         }
         else
