@@ -101,6 +101,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
 
 @interface MTStackContentContainerView : UIView <UIGestureRecognizerDelegate>
 
+@property (nonatomic, strong) UIView *separatorView;
 @end
 
 @implementation MTStackContentContainerView
@@ -336,6 +337,26 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
 {
     _rightViewControllerOverlayColor = [rightViewControllerOverlayColor copy];
     [[_rightContainerView overlayView] setBackgroundColor:[self rightViewControllerOverlayColor]];
+}
+
+- (void)setSeparatorColor:(UIColor *)separatorColor
+{
+    _separatorColor = separatorColor;
+    
+    if (!_contentContainerView.separatorView)
+    {
+        CGRect frame = CGRectMake(-1,
+                                  0,
+                                  1,
+                                  CGRectGetHeight(self.view.frame));
+
+        UIView *separatorView = [[UIView alloc] initWithFrame:frame];
+        [_contentContainerView addSubview:separatorView];
+        _contentContainerView.separatorView = separatorView;
+    }
+    
+    _contentContainerView.separatorView.backgroundColor = separatorColor;
+
 }
 
 - (void)setLeftViewController:(UIViewController *)leftViewController

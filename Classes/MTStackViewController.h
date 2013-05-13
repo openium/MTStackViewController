@@ -135,6 +135,10 @@
 // Default: [UIColor blackColor]
 @property (nonatomic, copy) UIColor *rightViewControllerOverlayColor;
 
+// Color for the separatot between the content view and the left view.
+// Default: nil
+@property (nonatomic, copy) UIColor *separatorColor;
+
 // NSArray of class objects which should prevent panning. These objects must be UIView class objects.
 // Default: nil
 @property (nonatomic, copy) NSArray *noSimultaneousPanningViewClasses;
