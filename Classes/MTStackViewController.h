@@ -185,6 +185,10 @@
 // Default: 0
 @property (nonatomic, assign) NSInteger contentViewControllerAnimationOption;
 
+// Animation option for hiding left view controller
+// Default: UIViewAnimationOptionCurveEaseOut
+@property (nonatomic, assign) UIViewAnimationOptions hideLeftViewControllerAnimation;
+
 @property (nonatomic, weak) id <MTStackViewControllerDelegate> delegate;
 
 

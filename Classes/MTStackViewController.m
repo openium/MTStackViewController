@@ -185,6 +185,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     _rightControllerParallaxEnabled = YES;
     _leftSnapThreshold = screenBounds.size.width / 2.0f;
     _rasterizesViewsDuringAnimation = YES;
+    _hideLeftViewControllerAnimation = UIViewAnimationOptionCurveEaseOut;
     
     [self setSlideOffset:roundf(screenBounds.size.width * 0.8f)];
     [self setHeaderSlideOffset:[self slideOffset] * 0.5];
@@ -891,7 +892,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     
     [UIView animateWithDuration:animationDuration
                           delay:0.0f
-                        options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState
+                        options:_hideLeftViewControllerAnimation | UIViewAnimationOptionBeginFromCurrentState
                      animations:^{
                          
                          [_contentContainerView setFrame:CGRectMake(0.0f,
