@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		22D883D017737B6D00619C35 /* FacingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22D883C817737B6D00619C35 /* FacingView.m */; };
+		22D883D117737B6D00619C35 /* MTStackFoldView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22D883CA17737B6D00619C35 /* MTStackFoldView.m */; };
+		22D883D217737B6D00619C35 /* ShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22D883CD17737B6D00619C35 /* ShadowView.m */; };
+		22D883D317737B6D00619C35 /* UIView+Screenshot.m in Sources */ = {isa = PBXBuildFile; fileRef = 22D883CF17737B6D00619C35 /* UIView+Screenshot.m */; };
+		22D883D517737DFB00619C35 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22D883D417737DFB00619C35 /* QuartzCore.framework */; };
+		22D883D8177380F500619C35 /* MTStackDefaultContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22D883D7177380F500619C35 /* MTStackDefaultContainerView.m */; };
 		22F4AFCF16BAECB6000384FD /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22F4AFCE16BAECB6000384FD /* UIKit.framework */; };
 		22F4AFD116BAECB6000384FD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22F4AFD016BAECB6000384FD /* Foundation.framework */; };
 		22F4AFD316BAECB6000384FD /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22F4AFD216BAECB6000384FD /* CoreGraphics.framework */; };
@@ -21,6 +27,18 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		22D883C717737B6D00619C35 /* FacingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FacingView.h; path = ../../Classes/FoldView/FacingView.h; sourceTree = "<group>"; };
+		22D883C817737B6D00619C35 /* FacingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FacingView.m; path = ../../Classes/FoldView/FacingView.m; sourceTree = "<group>"; };
+		22D883C917737B6D00619C35 /* MTStackFoldView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MTStackFoldView.h; path = ../../Classes/FoldView/MTStackFoldView.h; sourceTree = "<group>"; };
+		22D883CA17737B6D00619C35 /* MTStackFoldView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTStackFoldView.m; path = ../../Classes/FoldView/MTStackFoldView.m; sourceTree = "<group>"; };
+		22D883CB17737B6D00619C35 /* PaperFoldConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PaperFoldConstants.h; path = ../../Classes/FoldView/PaperFoldConstants.h; sourceTree = "<group>"; };
+		22D883CC17737B6D00619C35 /* ShadowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShadowView.h; path = ../../Classes/FoldView/ShadowView.h; sourceTree = "<group>"; };
+		22D883CD17737B6D00619C35 /* ShadowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShadowView.m; path = ../../Classes/FoldView/ShadowView.m; sourceTree = "<group>"; };
+		22D883CE17737B6D00619C35 /* UIView+Screenshot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+Screenshot.h"; path = "../../Classes/FoldView/UIView+Screenshot.h"; sourceTree = "<group>"; };
+		22D883CF17737B6D00619C35 /* UIView+Screenshot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+Screenshot.m"; path = "../../Classes/FoldView/UIView+Screenshot.m"; sourceTree = "<group>"; };
+		22D883D417737DFB00619C35 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		22D883D6177380F400619C35 /* MTStackDefaultContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MTStackDefaultContainerView.h; path = ../../Classes/MTStackDefaultContainerView.h; sourceTree = "<group>"; };
+		22D883D7177380F500619C35 /* MTStackDefaultContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTStackDefaultContainerView.m; path = ../../Classes/MTStackDefaultContainerView.m; sourceTree = "<group>"; };
 		22F4AFCB16BAECB6000384FD /* MTStackViewControllerExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MTStackViewControllerExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		22F4AFCE16BAECB6000384FD /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		22F4AFD016BAECB6000384FD /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -45,6 +63,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22D883D517737DFB00619C35 /* QuartzCore.framework in Frameworks */,
 				22F4AFCF16BAECB6000384FD /* UIKit.framework in Frameworks */,
 				22F4AFD116BAECB6000384FD /* Foundation.framework in Frameworks */,
 				22F4AFD316BAECB6000384FD /* CoreGraphics.framework in Frameworks */,
@@ -54,9 +73,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		22D883C617737B5700619C35 /* PaperFold */ = {
+			isa = PBXGroup;
+			children = (
+				22D883C717737B6D00619C35 /* FacingView.h */,
+				22D883C817737B6D00619C35 /* FacingView.m */,
+				22D883C917737B6D00619C35 /* MTStackFoldView.h */,
+				22D883CA17737B6D00619C35 /* MTStackFoldView.m */,
+				22D883CB17737B6D00619C35 /* PaperFoldConstants.h */,
+				22D883CC17737B6D00619C35 /* ShadowView.h */,
+				22D883CD17737B6D00619C35 /* ShadowView.m */,
+				22D883CE17737B6D00619C35 /* UIView+Screenshot.h */,
+				22D883CF17737B6D00619C35 /* UIView+Screenshot.m */,
+			);
+			name = PaperFold;
+			sourceTree = "<group>";
+		};
 		22F4AFC216BAECB6000384FD = {
 			isa = PBXGroup;
 			children = (
+				22D883D417737DFB00619C35 /* QuartzCore.framework */,
 				22F4AFD416BAECB6000384FD /* MTStackViewControllerExample */,
 				22F4AFCD16BAECB6000384FD /* Frameworks */,
 				22F4AFCC16BAECB6000384FD /* Products */,
@@ -118,8 +154,11 @@
 		22F4AFEC16BAED16000384FD /* MTStackViewController */ = {
 			isa = PBXGroup;
 			children = (
+				22D883C617737B5700619C35 /* PaperFold */,
 				22F4AFED16BAED2B000384FD /* MTStackViewController.h */,
 				22F4AFEE16BAED2B000384FD /* MTStackViewController.m */,
+				22D883D6177380F400619C35 /* MTStackDefaultContainerView.h */,
+				22D883D7177380F500619C35 /* MTStackDefaultContainerView.m */,
 			);
 			name = MTStackViewController;
 			sourceTree = "<group>";
@@ -203,6 +242,11 @@
 				22F4AFDF16BAECB6000384FD /* MTAppDelegate.m in Sources */,
 				22F4AFEF16BAED2B000384FD /* MTStackViewController.m in Sources */,
 				22F4AFF916BAEDB0000384FD /* MTMenuViewController.m in Sources */,
+				22D883D017737B6D00619C35 /* FacingView.m in Sources */,
+				22D883D117737B6D00619C35 /* MTStackFoldView.m in Sources */,
+				22D883D217737B6D00619C35 /* ShadowView.m in Sources */,
+				22D883D317737B6D00619C35 /* UIView+Screenshot.m in Sources */,
+				22D883D8177380F500619C35 /* MTStackDefaultContainerView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

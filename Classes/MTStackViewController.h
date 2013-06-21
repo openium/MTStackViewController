@@ -30,8 +30,13 @@
 
 #import <UIKit/UIKit.h>
 
+typedef enum
+{
+    MTStackViewControllerPositionLeft,
+    MTStackViewControllerPositionRight
+} MTStackViewControllerPosition;
+
 @class MTStackViewController;
-@class MTStackContainerView;
 @class MTStackContentContainerView;
 
 @protocol MTStackViewControllerDelegate <NSObject>
@@ -45,6 +50,16 @@
 
 // Called when the right view controller is fully revealed, and panning ends.
 - (void)stackViewController:(MTStackViewController *)stackViewController didRevealRightViewController:(UIViewController *)viewController;
+
+@end
+
+@interface MTStackContainerView : UIView
+
+-(void)setContentView:(UIView*)contentView;
+
+-(void)stackViewController:(MTStackViewController*)stackViewController show:(BOOL)show side:(MTStackViewControllerPosition)side toFrame:(CGRect)rect withDuration:(CGFloat)duration;
+
+-(void)stackViewController:(MTStackViewController *)stackViewController anmimateToFame:(CGRect)rect side:(MTStackViewControllerPosition)side withOffset:(CGFloat)offset;
 
 @end
 
@@ -67,18 +82,23 @@
 // Default: nil
 @property (nonatomic, strong) UIViewController *contentViewController;
 
-// Represends the left header view above the left view controller
+@property (nonatomic, strong) MTStackContentContainerView* contentContainerView;
+
+// Represents the left most container view on the "stack". Handles animation
+// between view controllers
 // Default: nil
-@property (nonatomic, strong) UIView *leftHeaderView;
+@property (nonatomic, strong) MTStackContainerView* leftContainerView;
+
+// Represents the right most container view on the "stack". Handles animation
+// between view controllers
+// Default: nil
+@property (nonatomic, strong) MTStackContainerView* rightContainerView;
 
 // How far the content controller's X coordinate should be from point 0.0f (left to right)
 // before the left controller should be considered revealed. This will automatically be
 // converted for the right controller.
 // Default: 80% of [UIScreen mainScreen]'s width.
 @property (nonatomic, assign) CGFloat slideOffset;
-
-// How far the left header's x origin should be before the parallax animation is started
-@property (nonatomic, assign) CGFloat headerSlideOffset;
 
 // How long the animation should take between states.
 // Default: 0.3f
@@ -127,14 +147,6 @@
 // Default: YES
 @property (nonatomic, assign) BOOL rasterizesViewsDuringAnimation;
 
-// Overlay color for the left view controller's view when out of focus.
-// Default: [UIColor blackColor]
-@property (nonatomic, copy) UIColor *leftViewControllerOverlayColor;
-
-// Overlay color for the right view controller's view when out of focus.
-// Default: [UIColor blackColor]
-@property (nonatomic, copy) UIColor *rightViewControllerOverlayColor;
-
 // Color for the separatot between the content view and the left view.
 // Default: nil
 @property (nonatomic, copy) UIColor *separatorColor;
@@ -146,14 +158,6 @@
 // When the touch is moving at the velocity, count that as a swipe
 // Default: 500.0f;
 @property (nonatomic, assign) CGFloat swipeVelocity;
-
-// Enable parallax of left view controller
-// Defaults: YES
-@property (nonatomic, assign, getter = isLeftControllerParallaxEnabled) BOOL leftControllerParallaxEnabled;
-
-// Enable parallax of right view controller
-// Defaults: YES
-@property (nonatomic, assign, getter = isRightControllerParallaxEnabled) BOOL rightControllerParallaxEnabled;
 
 // Enables panning to reveal the left view controller.
 // Default: YES
@@ -184,10 +188,6 @@
 // Animation option for setting content view controller
 // Default: 0
 @property (nonatomic, assign) NSInteger contentViewControllerAnimationOption;
-
-// Animation option for hiding left view controller
-// Default: UIViewAnimationOptionCurveEaseOut
-@property (nonatomic, assign) UIViewAnimationOptions hideLeftViewControllerAnimation;
 
 @property (nonatomic, weak) id <MTStackViewControllerDelegate> delegate;
 
