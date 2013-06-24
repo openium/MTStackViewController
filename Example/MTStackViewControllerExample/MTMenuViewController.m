@@ -39,10 +39,15 @@ static NSString *const MTTableViewCellIdentifier = @"MTTableViewCell";
 - (void)viewDidLoad
 {
     [[self tableView] registerClass:[UITableViewCell class] forCellReuseIdentifier:MTTableViewCellIdentifier];
+    
+    // For some reason, when the view is added for the fold view, the nav bar gets pushed down for the status bar
+    CGRect frame = self.navigationController.navigationBar.frame;
+    self.navigationController.navigationBar.frame = CGRectMake(0, 0, CGRectGetWidth(frame), CGRectGetHeight(frame));
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    NSLog(@"Frame = %@", self.navigationController.navigationBar);
     if (!_didSetInitialViewController)
     {
         [self setInitialViewController];
