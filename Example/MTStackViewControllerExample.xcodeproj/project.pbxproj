@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		03EF2DD9179F8753005460C7 /* MTZoomContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 03EF2DD8179F8753005460C7 /* MTZoomContainerView.m */; };
 		22D883D017737B6D00619C35 /* FacingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22D883C817737B6D00619C35 /* FacingView.m */; };
 		22D883D117737B6D00619C35 /* MTStackFoldView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22D883CA17737B6D00619C35 /* MTStackFoldView.m */; };
 		22D883D217737B6D00619C35 /* ShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22D883CD17737B6D00619C35 /* ShadowView.m */; };
@@ -27,6 +28,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		03EF2DD7179F8753005460C7 /* MTZoomContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MTZoomContainerView.h; path = ../../Classes/ZoomView/MTZoomContainerView.h; sourceTree = "<group>"; };
+		03EF2DD8179F8753005460C7 /* MTZoomContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTZoomContainerView.m; path = ../../Classes/ZoomView/MTZoomContainerView.m; sourceTree = "<group>"; };
 		22D883C717737B6D00619C35 /* FacingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FacingView.h; path = ../../Classes/FoldView/FacingView.h; sourceTree = "<group>"; };
 		22D883C817737B6D00619C35 /* FacingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FacingView.m; path = ../../Classes/FoldView/FacingView.m; sourceTree = "<group>"; };
 		22D883C917737B6D00619C35 /* MTStackFoldView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MTStackFoldView.h; path = ../../Classes/FoldView/MTStackFoldView.h; sourceTree = "<group>"; };
@@ -73,6 +76,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		03EF2DD6179F86CE005460C7 /* ZoomContainerView */ = {
+			isa = PBXGroup;
+			children = (
+				03EF2DD7179F8753005460C7 /* MTZoomContainerView.h */,
+				03EF2DD8179F8753005460C7 /* MTZoomContainerView.m */,
+			);
+			name = ZoomContainerView;
+			sourceTree = "<group>";
+		};
 		22D883C617737B5700619C35 /* PaperFold */ = {
 			isa = PBXGroup;
 			children = (
@@ -154,6 +166,7 @@
 		22F4AFEC16BAED16000384FD /* MTStackViewController */ = {
 			isa = PBXGroup;
 			children = (
+				03EF2DD6179F86CE005460C7 /* ZoomContainerView */,
 				22D883C617737B5700619C35 /* PaperFold */,
 				22F4AFED16BAED2B000384FD /* MTStackViewController.h */,
 				22F4AFEE16BAED2B000384FD /* MTStackViewController.m */,
@@ -242,6 +255,7 @@
 				22F4AFDF16BAECB6000384FD /* MTAppDelegate.m in Sources */,
 				22F4AFEF16BAED2B000384FD /* MTStackViewController.m in Sources */,
 				22F4AFF916BAEDB0000384FD /* MTMenuViewController.m in Sources */,
+				03EF2DD9179F8753005460C7 /* MTZoomContainerView.m in Sources */,
 				22D883D017737B6D00619C35 /* FacingView.m in Sources */,
 				22D883D117737B6D00619C35 /* MTStackFoldView.m in Sources */,
 				22D883D217737B6D00619C35 /* ShadowView.m in Sources */,

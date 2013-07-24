@@ -13,6 +13,7 @@
 
 #import "MTStackDefaultContainerView.h"
 #import "MTStackFoldView.h"
+#import "MTZoomContainerView.h"
 
 @implementation MTAppDelegate
 
@@ -29,8 +30,12 @@
     CGRect foldFrame = CGRectMake(0, 0, stackViewController.slideOffset,
                                   CGRectGetHeight(self.window.bounds));
     menuViewController.view.frame = foldFrame;
-    [stackViewController setLeftContainerView:[[MTStackFoldView alloc] initWithFrame:foldFrame foldDirection:FoldDirectionHorizontalLeftToRight]];
+    
+//    [stackViewController setLeftContainerView:[[MTStackFoldView alloc] initWithFrame:foldFrame foldDirection:FoldDirectionHorizontalLeftToRight]];
+    [stackViewController setLeftContainerView:[[MTZoomContainerView alloc] initWithFrame:foldFrame]];
     [stackViewController setLeftViewController:menuViewController];
+    
+    
 
     
     UITableViewController* tableViewController = [[UITableViewController alloc] initWithNibName:nil bundle:nil];
