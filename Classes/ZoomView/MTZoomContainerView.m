@@ -7,6 +7,7 @@
 //
 
 #import "MTZoomContainerView.h"
+#import <QuartzCore/QuartzCore.h>
 
 
 @interface MTZoomContainerView ()
