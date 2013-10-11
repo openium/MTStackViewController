@@ -443,6 +443,10 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
                     {
                         [self hideRightViewControllerAnimated:animated];
                     }
+                    else
+                    {
+                        [self setContentViewUserInteractionEnabled:YES];
+                    }
                 }
             }];
         }
@@ -458,6 +462,10 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
                 else if ([self isRightViewControllerVisible])
                 {
                     [self hideRightViewControllerAnimated:animated];
+                }
+                else
+                {
+                    [self setContentViewUserInteractionEnabled:YES];
                 }
             }
         }
@@ -476,6 +484,10 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
             else if ([self isRightViewControllerVisible])
             {
                 [self hideRightViewControllerAnimated:animated];
+            }
+            else
+            {
+                [self setContentViewUserInteractionEnabled:YES];
             }
         }
     }
