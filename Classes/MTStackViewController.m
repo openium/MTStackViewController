@@ -183,12 +183,10 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     _rightViewControllerEnabled = NO;
     _leftControllerParallaxEnabled = YES;
     _rightControllerParallaxEnabled = YES;
-    _leftSnapThreshold = screenBounds.size.width / 2.0f;
     _rasterizesViewsDuringAnimation = YES;
     _hideLeftViewControllerAnimation = UIViewAnimationOptionCurveEaseOut;
     
     [self setSlideOffset:roundf(screenBounds.size.width * 0.8f)];
-    [self setHeaderSlideOffset:[self slideOffset] * 0.5];
     
     _leftContainerView = [[MTStackContainerView alloc] initWithFrame:screenBounds];
     _leftHeaderView = [[MTStackContainerView alloc] initWithFrame:CGRectZero];
@@ -226,6 +224,13 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     [self setLeftViewControllerOverlayColor:[UIColor blackColor]];
     [self setRightViewControllerOverlayColor:[UIColor blackColor]];
     [[_leftHeaderView overlayView] setBackgroundColor:[UIColor blackColor]];
+}
+
+- (void)setSlideOffset:(CGFloat)slideOffset
+{
+    _slideOffset = slideOffset;
+    _leftSnapThreshold = self.slideOffset * 0.5f;
+    self.headerSlideOffset = self.slideOffset * 0.5f;
 }
 
 - (void)loadView
