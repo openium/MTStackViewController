@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		03EF2DD9179F8753005460C7 /* MTZoomContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 03EF2DD8179F8753005460C7 /* MTZoomContainerView.m */; };
+		176E78F418A930E6006FBD7E /* ExampleTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 176E78F318A930E6006FBD7E /* ExampleTableViewController.m */; };
 		22D883D017737B6D00619C35 /* FacingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22D883C817737B6D00619C35 /* FacingView.m */; };
 		22D883D117737B6D00619C35 /* MTStackFoldView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22D883CA17737B6D00619C35 /* MTStackFoldView.m */; };
 		22D883D217737B6D00619C35 /* ShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22D883CD17737B6D00619C35 /* ShadowView.m */; };
@@ -30,6 +31,8 @@
 /* Begin PBXFileReference section */
 		03EF2DD7179F8753005460C7 /* MTZoomContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MTZoomContainerView.h; path = ../../Classes/ZoomView/MTZoomContainerView.h; sourceTree = "<group>"; };
 		03EF2DD8179F8753005460C7 /* MTZoomContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTZoomContainerView.m; path = ../../Classes/ZoomView/MTZoomContainerView.m; sourceTree = "<group>"; };
+		176E78F218A930E6006FBD7E /* ExampleTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExampleTableViewController.h; sourceTree = "<group>"; };
+		176E78F318A930E6006FBD7E /* ExampleTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExampleTableViewController.m; sourceTree = "<group>"; };
 		22D883C717737B6D00619C35 /* FacingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FacingView.h; path = ../../Classes/FoldView/FacingView.h; sourceTree = "<group>"; };
 		22D883C817737B6D00619C35 /* FacingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FacingView.m; path = ../../Classes/FoldView/FacingView.m; sourceTree = "<group>"; };
 		22D883C917737B6D00619C35 /* MTStackFoldView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MTStackFoldView.h; path = ../../Classes/FoldView/MTStackFoldView.h; sourceTree = "<group>"; };
@@ -136,6 +139,8 @@
 				22F4AFEC16BAED16000384FD /* MTStackViewController */,
 				22F4AFEB16BAED05000384FD /* MTAppDelegate */,
 				22F4AFD516BAECB6000384FD /* Supporting Files */,
+				176E78F218A930E6006FBD7E /* ExampleTableViewController.h */,
+				176E78F318A930E6006FBD7E /* ExampleTableViewController.m */,
 			);
 			path = MTStackViewControllerExample;
 			sourceTree = "<group>";
@@ -251,6 +256,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				176E78F418A930E6006FBD7E /* ExampleTableViewController.m in Sources */,
 				22F4AFDB16BAECB6000384FD /* main.m in Sources */,
 				22F4AFDF16BAECB6000384FD /* MTAppDelegate.m in Sources */,
 				22F4AFEF16BAED2B000384FD /* MTStackViewController.m in Sources */,

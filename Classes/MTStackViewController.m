@@ -378,6 +378,10 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
+    if ([otherGestureRecognizer.view.superview isKindOfClass:[UITableViewCell class]])  {
+        return (self.percentRevealed == 0);
+    }
+    
     BOOL shouldRecognize = YES;
     
     if ([[[otherGestureRecognizer view] superview] isKindOfClass:[UISwitch class]])
@@ -549,9 +553,9 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
         ([self isRightViewControllerEnabled] && contentViewFrameX < 0.0f)
         )
     {
-        CGFloat percentRevealed = (fabsf(contentViewFrameX) / [self slideOffset]);
+        _percentRevealed = (fabsf(contentViewFrameX) / [self slideOffset]);
         
-        [containerView stackViewController:self anmimateToFame:containerFrame side:side withOffset:percentRevealed];
+        [containerView stackViewController:self anmimateToFame:containerFrame side:side withOffset:_percentRevealed];
 
         [UIView animateWithDuration:[self trackingAnimationDuration]
                               delay:0.0f
@@ -564,8 +568,8 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
                                                                         CGRectGetHeight([_contentContainerView frame]))];
                              
 
-                             [[_contentContainerView layer] setShadowRadius:[self maxShadowRadius] - (([self maxShadowRadius] - [self minShadowRadius]) * percentRevealed)];
-                             [[_contentContainerView layer] setShadowOpacity:1.0f - (0.5 * percentRevealed)];
+                             [[_contentContainerView layer] setShadowRadius:[self maxShadowRadius] - (([self maxShadowRadius] - [self minShadowRadius]) * _percentRevealed)];
+                             [[_contentContainerView layer] setShadowOpacity:1.0f - (0.5 * _percentRevealed)];
                              
                          } completion:^(BOOL finished) {
                              
@@ -576,6 +580,8 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
                              }
                              
                          }];
+    } else {
+        _percentRevealed = 0;
     }
 }
 

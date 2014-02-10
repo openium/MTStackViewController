@@ -9,6 +9,7 @@
 #import "MTMenuViewController.h"
 
 #import "MTStackViewController.h"
+#import "ExampleTableViewController.h"
 
 static NSString *const MTTableViewCellIdentifier = @"MTTableViewCell";
 
@@ -80,9 +81,16 @@ static NSString *const MTTableViewCellIdentifier = @"MTTableViewCell";
 
 - (UIViewController *)contentViewcontrollerForIndexPath:(NSIndexPath *)indexPath
 {
-    UIViewController *viewController = [UIViewController new];
-    [[viewController view] setBackgroundColor:_datasource[[indexPath row]]];
-    [[viewController navigationItem] setTitle:[NSString stringWithFormat:@"View Controller %d", [indexPath row]]];
+    UIViewController *viewController = nil;
+    if (indexPath.row == 3) {
+        viewController = [ExampleTableViewController new];
+        [[viewController view] setBackgroundColor:_datasource[[indexPath row]]];
+        [[viewController navigationItem] setTitle:[NSString stringWithFormat:@"Table %d", [indexPath row]]];
+    } else {
+        viewController = [UIViewController new];
+        [[viewController view] setBackgroundColor:_datasource[[indexPath row]]];
+        [[viewController navigationItem] setTitle:[NSString stringWithFormat:@"View Controller %d", [indexPath row]]];
+    }
     
     UIBarButtonItem *menuBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Menu" style:UIBarButtonItemStyleBordered target:[self stackViewController] action:@selector(toggleLeftViewController)];
     [[viewController navigationItem] setLeftBarButtonItem:menuBarButtonItem];

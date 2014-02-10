@@ -100,6 +100,12 @@ typedef enum
 // Default: 80% of [UIScreen mainScreen]'s width.
 @property (nonatomic, assign) CGFloat slideOffset;
 
+
+// How much of the navigation controlled has been releaved
+// given as a value from 0 (content view is at x coordinate 0) to
+// 1 (contenet view is at x coordiante equal to slideOffset).
+@property (nonatomic, assign) CGFloat percentRevealed;
+
 // How long the animation should take between states.
 // Default: 0.3f
 @property (nonatomic, assign) CGFloat slideAnimationDuration;
