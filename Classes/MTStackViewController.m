@@ -96,6 +96,8 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     {
         [self setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
         [self setAutoresizesSubviews:YES];
+
+        [self.layer setRasterizationScale:[UIScreen mainScreen].scale];
     }
     return self;
 }
