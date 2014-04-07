@@ -71,7 +71,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     
 }
 
-- (void)stackViewController:(MTStackViewController *)stackViewController anmimateToFame:(CGRect)rect side:(MTStackViewControllerPosition)side withOffset:(CGFloat)offset
+- (void)stackViewController:(MTStackViewController *)stackViewController animateToFrame:(CGRect)rect side:(MTStackViewControllerPosition)side withOffset:(CGFloat)offset
 {
     
 }
@@ -555,7 +555,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     {
         _percentRevealed = (fabsf(contentViewFrameX) / [self slideOffset]);
         
-        [containerView stackViewController:self anmimateToFame:containerFrame side:side withOffset:_percentRevealed];
+        [containerView stackViewController:self animateToFrame:containerFrame side:side withOffset:_percentRevealed];
 
         [UIView animateWithDuration:[self trackingAnimationDuration]
                               delay:0.0f

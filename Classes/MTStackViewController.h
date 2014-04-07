@@ -59,7 +59,7 @@ typedef enum
 
 -(void)stackViewController:(MTStackViewController*)stackViewController show:(BOOL)show side:(MTStackViewControllerPosition)side toFrame:(CGRect)rect withDuration:(CGFloat)duration;
 
--(void)stackViewController:(MTStackViewController *)stackViewController anmimateToFame:(CGRect)rect side:(MTStackViewControllerPosition)side withOffset:(CGFloat)offset;
+-(void)stackViewController:(MTStackViewController *)stackViewController animateToFrame:(CGRect)rect side:(MTStackViewControllerPosition)side withOffset:(CGFloat)offset;
 
 @end
 
