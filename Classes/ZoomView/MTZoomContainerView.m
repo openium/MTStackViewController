@@ -71,7 +71,7 @@
                      }];
 }
 
--(void)stackViewController:(MTStackViewController *)stackViewController anmimateToFame:(CGRect)rect side:(MTStackViewControllerPosition)side withOffset:(CGFloat)offset
+-(void)stackViewController:(MTStackViewController *)stackViewController animateToFrame:(CGRect)rect side:(MTStackViewControllerPosition)side withOffset:(CGFloat)offset
 {
     [self.overlayView setAlpha:0.7f - (1.0f * fminf(offset, 0.7f))];
     

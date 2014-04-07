@@ -149,7 +149,7 @@
     [self.rightView.shadowView setAlpha:1-fraction];
 }
 
--(void)stackViewController:(MTStackViewController *)stackViewController anmimateToFame:(CGRect)rect side:(MTStackViewControllerPosition)side withOffset:(CGFloat)offset;
+-(void)stackViewController:(MTStackViewController *)stackViewController animateToFrame:(CGRect)rect side:(MTStackViewControllerPosition)side withOffset:(CGFloat)offset;
 {
     [UIView animateWithDuration:stackViewController.trackingAnimationDuration
                           delay:0.0f

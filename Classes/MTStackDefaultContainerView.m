@@ -79,7 +79,7 @@
                      }];
 }
 
--(void)stackViewController:(MTStackViewController *)stackViewController anmimateToFame:(CGRect)rect side:(MTStackViewControllerPosition)side withOffset:(CGFloat)offset
+-(void)stackViewController:(MTStackViewController *)stackViewController animateToFrame:(CGRect)rect side:(MTStackViewControllerPosition)side withOffset:(CGFloat)offset
 {
     float x = CGRectGetMinX(rect);
     if(self.parallaxEnabled)
