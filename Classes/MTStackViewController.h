@@ -67,7 +67,9 @@ typedef enum
 {
     // This is the "main" pan gesture. If you subclass MTStackViewController and want to implment delegate methods
     // for the gesture recognizer, make sure you call super if you want the "built in" functionality.
+    UIScreenEdgePanGestureRecognizer *_screenEdgeGestureRecognizer;
     UIPanGestureRecognizer *_panGestureRecognizer;
+    UIPanGestureRecognizer *_rightPanGestureRecognizer;
 }
 
 // Represents the left most view controller on the "stack".
@@ -99,7 +101,6 @@ typedef enum
 // converted for the right controller.
 // Default: 80% of [UIScreen mainScreen]'s width.
 @property (nonatomic, assign) CGFloat slideOffset;
-
 
 // How much of the navigation controlled has been releaved
 // given as a value from 0 (content view is at x coordinate 0) to
@@ -150,7 +151,7 @@ typedef enum
 @property (nonatomic, assign) CGFloat leftSnapThreshold;
 
 // Rasterizes views during animation when set to YES. Imporoves general performance.
-// Default: YES
+// Default: NO
 @property (nonatomic, assign) BOOL rasterizesViewsDuringAnimation;
 
 // Color for the separatot between the content view and the left view.
@@ -221,6 +222,12 @@ typedef enum
 - (void)toggleRightViewControllerAnimated:(BOOL)animated;
 - (void)toggleRightViewController;
 
+- (void)panGestureRecognizerDidPan:(UIPanGestureRecognizer *)panGestureRecognizer;
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer;
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer;
+
 @end
 
 @protocol MTStackChildViewController <NSObject>
@@ -240,5 +247,7 @@ typedef enum
 
 // This will return the child view controllers parent stack view controller
 @property (nonatomic, readonly) MTStackViewController *stackViewController;
+
+- (void)setStackViewController:(MTStackViewController *)stackViewController;
 
 @end

@@ -161,7 +161,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     _leftViewControllerEnabled = YES;
     _rightViewControllerEnabled = NO;
     _leftSnapThreshold = screenBounds.size.width / 2.0f;
-    _rasterizesViewsDuringAnimation = YES;
+    _rasterizesViewsDuringAnimation = NO;
     
     [self setSlideOffset:roundf(screenBounds.size.width * 0.8f)];
     
@@ -177,8 +177,14 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     _panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureRecognizerDidPan:)];
     [_panGestureRecognizer setCancelsTouchesInView:YES];
     [_panGestureRecognizer setDelegate:self];
-    [_contentContainerView addGestureRecognizer:_panGestureRecognizer];
+    [self.contentContainerView addGestureRecognizer:_panGestureRecognizer];
     
+    _screenEdgeGestureRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureRecognizerDidPan:)];
+    [_screenEdgeGestureRecognizer setEdges:UIRectEdgeLeft];
+    [_screenEdgeGestureRecognizer setCancelsTouchesInView:YES];
+    [_screenEdgeGestureRecognizer setDelegate:self];
+    [self.contentContainerView addGestureRecognizer:_screenEdgeGestureRecognizer];
+
     [self setSlideAnimationDuration:0.3f];
     [self setTrackingAnimationDuration:0.05f];
     [self setMinShadowRadius:3.0f];
@@ -287,6 +293,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
                                   CGRectGetHeight(self.view.frame));
 
         UIView *separatorView = [[UIView alloc] initWithFrame:frame];
+        [separatorView setAutoresizingMask:UIViewAutoresizingFlexibleHeight];
         [_contentContainerView addSubview:separatorView];
         _contentContainerView.separatorView = separatorView;
     }
@@ -326,6 +333,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     if (newViewController)
     {
         [newViewController setStackViewController:self];
+        [newViewController.view setFrame:[containerView bounds]];
         [self addChildViewController:newViewController];
         
         if (currentViewController)
@@ -385,12 +393,15 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     }
     
     BOOL shouldRecognize = YES;
-    
+ 
     if ([[[otherGestureRecognizer view] superview] isKindOfClass:[UISwitch class]])
     {
         shouldRecognize = NO;
     }
     
+    if (self.percentRevealed == 0 && [otherGestureRecognizer.view.superview isKindOfClass:[UITableViewCell class]])  {
+        return YES;
+    }
     for (Class class in [self noSimultaneousPanningViewClasses])
     {
         if ([[otherGestureRecognizer view] isKindOfClass:class] || [[[otherGestureRecognizer view] superview] isKindOfClass:class])
@@ -404,7 +415,12 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
 {
+    if (gestureRecognizer == _panGestureRecognizer && ![self isLeftViewControllerVisible])
+    {
+        return NO;
+    }
     BOOL shouldBegin = [self contentContainerView:_contentContainerView panGestureRecognizerShouldPan:(UIPanGestureRecognizer *)gestureRecognizer];
+    
     
     return shouldBegin;
 }
@@ -970,6 +986,24 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
         {
             shouldPan = [navigationChild shouldAllowPanning];
         }
+        
+        if (shouldPan)
+        {
+            CGPoint velocity = [panGestureRecognizer velocityInView:self.view];
+            if (!_rightViewControllerEnabled &&
+                (velocity.x < 0.0) &&
+                (_contentContainerView.frame.origin.x == 0))
+            {
+                shouldPan = NO;
+            }
+            else if (!_leftViewControllerEnabled &&
+                     (velocity.x > 0.0) &&
+                     (_contentContainerView.frame.origin.x == 0))
+            {
+                shouldPan = NO;
+            }
+        }
+        
     }
     
     return shouldPan;

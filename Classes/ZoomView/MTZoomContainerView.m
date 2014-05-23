@@ -33,9 +33,8 @@
         [self addSubview:_overlayView];
         
         self.transform = CGAffineTransformMakeScale(0.7f, 0.7f);
-        
+        [self setBackgroundColor:[UIColor blackColor]];
         [self.layer setRasterizationScale:[UIScreen mainScreen].scale];
-        self.backgroundColor = [UIColor whiteColor];
     }
     return self;
 }
