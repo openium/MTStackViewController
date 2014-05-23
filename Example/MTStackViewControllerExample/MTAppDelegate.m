@@ -31,8 +31,8 @@
                                   CGRectGetHeight(self.window.bounds));
     menuViewController.view.frame = foldFrame;
     
-//    [stackViewController setLeftContainerView:[[MTStackFoldView alloc] initWithFrame:foldFrame foldDirection:FoldDirectionHorizontalLeftToRight]];
-    [stackViewController setLeftContainerView:[[MTZoomContainerView alloc] initWithFrame:foldFrame]];
+    [stackViewController setLeftContainerView:[[MTStackFoldView alloc] initWithFrame:foldFrame foldDirection:FoldDirectionHorizontalLeftToRight]];
+//    [stackViewController setLeftContainerView:[[MTZoomContainerView alloc] initWithFrame:foldFrame]];
     [stackViewController setLeftViewController:menuViewController];
     
     
