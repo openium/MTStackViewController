@@ -94,7 +94,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     self = [super initWithFrame:frame];
     if (self)
     {
-        [self setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
+        [self setAutoresizingMask:(UIViewAutoresizing)(UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth)];
         [self setAutoresizesSubviews:YES];
 
         [self.layer setRasterizationScale:[UIScreen mainScreen].scale];
@@ -203,7 +203,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     
     UIView *view = [[UIView alloc] initWithFrame:frame];
     [view setAutoresizesSubviews:YES];
-    [view setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
+    [view setAutoresizingMask:(UIViewAutoresizing)(UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth)];
 
     self.leftContainerView.frame = view.bounds;
     [view addSubview:self.leftContainerView];
@@ -577,7 +577,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
 
         [UIView animateWithDuration:[self trackingAnimationDuration]
                               delay:0.0f
-                            options:UIViewAnimationOptionCurveLinear | UIViewAnimationOptionBeginFromCurrentState
+                            options:(UIViewAnimationOptions)(UIViewAnimationOptionCurveLinear | UIViewAnimationOptionBeginFromCurrentState)
                          animations:^{
                              
                              [_contentContainerView setFrame:CGRectMake(contentViewFrameX,
@@ -674,7 +674,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
         
         [UIView animateWithDuration:animationDuration
                               delay:0.0f
-                            options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState
+                            options:(UIViewAnimationOptions)(UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState)
                          animations:^{
                              
                              [_contentContainerView setFrame:CGRectMake([self slideOffset],
@@ -740,7 +740,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
         
         [UIView animateWithDuration:animated ? [self slideAnimationDuration] : 0.0f
                               delay:0.0f
-                            options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState
+                            options:(UIViewAnimationOptions)(UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState)
                          animations:^{
                              
                              [_contentContainerView setFrame:CGRectMake(-CGRectGetWidth([_contentContainerView bounds]) + (CGRectGetWidth([_contentContainerView bounds]) - [self slideOffset]),
@@ -845,7 +845,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     
     [UIView animateWithDuration:animationDuration
                           delay:0.0f
-                        options:UIViewAnimationOptionCurveEaseOut |UIViewAnimationOptionBeginFromCurrentState
+                        options:(UIViewAnimationOptions)(UIViewAnimationOptionCurveEaseOut |UIViewAnimationOptionBeginFromCurrentState)
                      animations:^{
                          [_contentContainerView setFrame:contentFrame];
                          [[_contentContainerView layer] setShadowRadius:[self maxShadowRadius]];
