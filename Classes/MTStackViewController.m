@@ -96,7 +96,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     {
         [self setAutoresizingMask:(UIViewAutoresizing)(UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth)];
         [self setAutoresizesSubviews:YES];
-
+        
         [self.layer setRasterizationScale:[UIScreen mainScreen].scale];
     }
     return self;
@@ -119,6 +119,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     CGRect _initialContentControllerFrame;
     UITapGestureRecognizer *_tapGestureRecognizer;
 }
+
 @end
 
 @interface MTStackViewController () <UIGestureRecognizerDelegate>
@@ -131,14 +132,14 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-	self = [super initWithCoder:aDecoder];
-	
-	if (self)
-	{
-		[self setup];
-	}
-	
-	return self;
+    self = [super initWithCoder:aDecoder];
+    
+    if (self)
+    {
+        [self setup];
+    }
+    
+    return self;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -147,7 +148,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     
     if (self)
     {
-		[self setup];
+        [self setup];
     }
     return self;
 }
@@ -163,7 +164,15 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     _leftSnapThreshold = screenBounds.size.width / 2.0f;
     _rasterizesViewsDuringAnimation = NO;
     
-    [self setSlideOffset:roundf(screenBounds.size.width * 0.8f)];
+    CGFloat kScale = [self menuWidthRatio];
+    
+    CGFloat width = screenBounds.size.width;
+    if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
+    {
+        width = screenBounds.size.height;
+    }
+    
+    [self setSlideOffset:roundf(width * kScale)];
     
     _leftContainerView = [[MTStackDefaultContainerView alloc] initWithFrame:screenBounds];
     _rightContainerView = [[MTStackDefaultContainerView alloc] initWithFrame:screenBounds];
@@ -184,7 +193,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     [_screenEdgeGestureRecognizer setCancelsTouchesInView:YES];
     [_screenEdgeGestureRecognizer setDelegate:self];
     [self.contentContainerView addGestureRecognizer:_screenEdgeGestureRecognizer];
-
+    
     [self setSlideAnimationDuration:0.3f];
     [self setTrackingAnimationDuration:0.05f];
     [self setMinShadowRadius:3.0f];
@@ -197,6 +206,8 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
 
 - (void)loadView
 {
+    CGFloat kScale = [self menuWidthRatio];
+    
     CGRect frame = [[UIScreen mainScreen] bounds];
     CGRect statusBarFrame = [[UIApplication sharedApplication] statusBarFrame];
     frame.size.height -= MIN(statusBarFrame.size.width, statusBarFrame.size.height);
@@ -204,16 +215,17 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     UIView *view = [[UIView alloc] initWithFrame:frame];
     [view setAutoresizesSubviews:YES];
     [view setAutoresizingMask:(UIViewAutoresizing)(UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth)];
-
-    self.leftContainerView.frame = view.bounds;
-    [view addSubview:self.leftContainerView];
     
     float frameWidth = CGRectGetWidth(view.frame);
+    float frameHeight = CGRectGetHeight(view.frame);
+    self.leftContainerView.frame = CGRectMake(0, 0, frameWidth * kScale, frameHeight);// view.bounds;
+    [view addSubview:self.leftContainerView];
+    
     self.rightContainerView.frame = CGRectMake(frameWidth - self.slideOffset,
-                                               0.0f, frameWidth,
+                                               0.0f, frameWidth * kScale,
                                                CGRectGetHeight(view.frame));
     [view addSubview:self.rightContainerView];
-
+    
     [_contentContainerView setFrame:[view bounds]];
     [view addSubview:_contentContainerView];
     
@@ -231,11 +243,13 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
 {
     _noSimultaneousPanningViewClasses = [noSimultaneousPanningViewClasses copy];
     
+#ifdef DEBUG
     for (id object in [self noSimultaneousPanningViewClasses])
     {
         NSAssert(class_isMetaClass(object_getClass(object)), @"Objects in this array must be of type 'Class'");
         NSAssert([(Class)object isSubclassOfClass:[UIView class]], @"Class objects in this array must be UIView subclasses");
     }
+#endif
 }
 
 - (void)setShadowColor:(UIColor *)shadowColor
@@ -296,7 +310,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
                                   0,
                                   1,
                                   CGRectGetHeight(self.view.frame));
-
+        
         UIView *separatorView = [[UIView alloc] initWithFrame:frame];
         [separatorView setAutoresizingMask:UIViewAutoresizingFlexibleHeight];
         [_contentContainerView addSubview:separatorView];
@@ -304,7 +318,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     }
     
     _contentContainerView.separatorView.backgroundColor = separatorColor;
-
+    
 }
 
 - (void)setLeftViewController:(UIViewController *)leftViewController
@@ -398,7 +412,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     }
     
     BOOL shouldRecognize = YES;
- 
+    
     if ([[[otherGestureRecognizer view] superview] isKindOfClass:[UISwitch class]])
     {
         shouldRecognize = NO;
@@ -579,18 +593,18 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
         _percentRevealed = (fabs(contentViewFrameX) / [self slideOffset]);
         
         [containerView stackViewController:self animateToFrame:containerFrame side:side withOffset:_percentRevealed];
-
+        
         [UIView animateWithDuration:[self trackingAnimationDuration]
                               delay:0.0f
                             options:(UIViewAnimationOptions)(UIViewAnimationOptionCurveLinear | UIViewAnimationOptionBeginFromCurrentState)
                          animations:^{
                              
                              [[self contentContainerView] setFrame:CGRectMake(contentViewFrameX,
-                                                                        CGRectGetMinY([[self contentContainerView] frame]),
-                                                                        CGRectGetWidth([[self contentContainerView] frame]),
-                                                                        CGRectGetHeight([[self contentContainerView] frame]))];
+                                                                              CGRectGetMinY([[self contentContainerView] frame]),
+                                                                              CGRectGetWidth([[self contentContainerView] frame]),
+                                                                              CGRectGetHeight([[self contentContainerView] frame]))];
                              
-
+                             
                              [[[self contentContainerView] layer] setShadowRadius:[self maxShadowRadius] - (([self maxShadowRadius] - [self minShadowRadius]) * [self percentRevealed])];
                              [[[self contentContainerView] layer] setShadowOpacity:1.0f - (0.5 * [self percentRevealed])];
                              
@@ -639,6 +653,12 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
 }
 
 - (void)revealLeftViewControllerAnimated:(BOOL)animated
+
+{
+    [self revealLeftViewControllerAnimated:animated preventUserInteraction:YES];
+}
+
+- (void)revealLeftViewControllerAnimated:(BOOL)animated preventUserInteraction:(BOOL)preventUserInteraction
 {
     if ([self isLeftViewControllerEnabled])
     {
@@ -683,9 +703,9 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
                          animations:^{
                              
                              [[self contentContainerView] setFrame:CGRectMake([self slideOffset],
-                                                                        CGRectGetMinY([[self contentContainerView] frame]),
-                                                                        CGRectGetWidth([[self contentContainerView] frame]),
-                                                                        CGRectGetHeight([[self contentContainerView] frame]))];
+                                                                              CGRectGetMinY([[self contentContainerView] frame]),
+                                                                              CGRectGetWidth([[self contentContainerView] frame]),
+                                                                              CGRectGetHeight([[self contentContainerView] frame]))];
                              
                              
                              [[[self contentContainerView] layer] setShadowRadius:[self minShadowRadius]];
@@ -700,7 +720,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
                                  [[[self rightContainerView] layer] setShouldRasterize:NO];
                              }
                              
-                             [self setContentViewUserInteractionEnabled:NO];
+                             [self setContentViewUserInteractionEnabled:!preventUserInteraction];
                              [[self contentContainerView] addGestureRecognizer:[self tapGestureRecognizer]];
                              
                              if ([[self delegate] respondsToSelector:@selector(stackViewController:didRevealLeftViewController:)])
@@ -718,6 +738,11 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
 }
 
 - (void)revealRightViewControllerAnimated:(BOOL)animated
+{
+    [self revealRightViewControllerAnimated:animated preventUserInteraction:YES];
+}
+
+- (void)revealRightViewControllerAnimated:(BOOL)animated preventUserInteraction:(BOOL)preventUserInteraction
 {
     if ([self isRightViewControllerEnabled])
     {
@@ -749,9 +774,9 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
                          animations:^{
                              
                              [[self contentContainerView] setFrame:CGRectMake(-CGRectGetWidth([[self contentContainerView] bounds]) + (CGRectGetWidth([[self contentContainerView] bounds]) - [self slideOffset]),
-                                    CGRectGetMinY([[self contentContainerView] frame]),
-                                    CGRectGetWidth([[self contentContainerView] frame]),
-                                    CGRectGetHeight([[self contentContainerView] frame]))];
+                                                                              CGRectGetMinY([[self contentContainerView] frame]),
+                                                                              CGRectGetWidth([[self contentContainerView] frame]),
+                                                                              CGRectGetHeight([[self contentContainerView] frame]))];
                              [[[self contentContainerView] layer] setShadowRadius:[self minShadowRadius]];
                              [[[self contentContainerView] layer] setShadowOpacity:[self minShadowOpacity]];
                              
@@ -763,7 +788,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
                                  [[[self leftContainerView] layer] setShouldRasterize:NO];
                                  [[[self rightContainerView] layer] setShouldRasterize:NO];
                              }
-                             [self setContentViewUserInteractionEnabled:NO];
+                             [self setContentViewUserInteractionEnabled:!preventUserInteraction];
                              [[self contentContainerView] addGestureRecognizer:[self tapGestureRecognizer]];
                              
                              if ([[self delegate] respondsToSelector:@selector(stackViewController:didRevealLeftViewController:)])
@@ -813,7 +838,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
             if (CGRectGetMinX([_contentContainerView frame]) > 0.0f)
             {
                 animationDuration = [self slideAnimationDuration] * (CGRectGetMinX([_contentContainerView frame]) / [self slideOffset]);
-            } 
+            }
             else
             {
                 animationDuration = [self slideAnimationDuration] * ((CGRectGetWidth([_contentContainerView bounds]) - CGRectGetMaxX([_contentContainerView frame])) / [self slideOffset]);
@@ -825,9 +850,9 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
             animationDuration = [self slideAnimationDuration];
         }
     }
-
+    
     CGRect leftFrame = CGRectMake(0.0f, CGRectGetMinY([_leftContainerView frame]),
-        CGRectGetWidth([_leftContainerView frame]), CGRectGetHeight([_leftContainerView frame]));
+                                  CGRectGetWidth([_leftContainerView frame]), CGRectGetHeight([_leftContainerView frame]));
     
     CGRect rightFrame = CGRectMake(CGRectGetWidth(_contentContainerView.frame) - self.slideOffset,
                                    CGRectGetMinY([_rightContainerView frame]),
@@ -1017,7 +1042,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
 - (CGRect)screenBounds
 {
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
-    if (UIInterfaceOrientationIsLandscape([self interfaceOrientation]))
+    if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
         screenBounds.size = CGSizeMake(screenBounds.size.height, screenBounds.size.width);
     
     return screenBounds;
@@ -1071,7 +1096,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     CGRect frame = self.view.frame;
     _leftContainerView.frame = frame;
     [self.leftContainerView removeFromSuperview];
-
+    
     
     _leftContainerView = leftContainerView;
     if(self.leftViewController)
@@ -1089,7 +1114,7 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
     // Force the view to load if it hasn't
     CGRect frame = self.view.frame;
     _rightContainerView.frame = frame;
-
+    
     [self.rightContainerView removeFromSuperview];
     
     _rightContainerView = rightContainerView;
@@ -1140,19 +1165,28 @@ const char *MTStackViewControllerKey = "MTStackViewControllerKey";
 
 #pragma mark - Support Rotation
 
-- (NSUInteger)supportedInterfaceOrientations
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
-    return UIInterfaceOrientationMaskPortrait;
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return UIInterfaceOrientationIsPortrait(interfaceOrientation);
+    return UIInterfaceOrientationMaskAll;
 }
 
 - (BOOL)shouldAutorotate
 {
-    return NO;
+    return YES;
+}
+
+#pragma mark - Compute scale
+
+- (CGFloat)menuWidthRatio
+{
+    CGFloat kScale = 0.8f;
+    
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+    {
+        kScale = 0.33f;
+    }
+    
+    return kScale;
 }
 
 @end

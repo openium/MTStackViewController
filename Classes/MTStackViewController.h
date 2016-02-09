@@ -206,6 +206,7 @@ typedef enum
 // Sets the contentViewController, and will optionally hide the left or right view controller, if one of them is visible.
 - (void)setContentViewController:(UIViewController *)contentViewController snapToContentViewController:(BOOL)snapToContentViewController animated:(BOOL)animated;
 
+- (void)revealLeftViewControllerAnimated:(BOOL)animated preventUserInteraction:(BOOL)preventUserInteraction;
 - (void)revealLeftViewControllerAnimated:(BOOL)animated;
 - (void)revealLeftViewController;
 - (void)hideLeftViewControllerAnimated:(BOOL)animated;
@@ -214,6 +215,7 @@ typedef enum
 - (void)toggleLeftViewControllerAnimated:(BOOL)animated;
 - (void)toggleLeftViewController;
 
+- (void)revealRightViewControllerAnimated:(BOOL)animated preventUserInteraction:(BOOL)preventUserInteraction;
 - (void)revealRightViewControllerAnimated:(BOOL)animated;
 - (void)revealRightViewController;
 - (void)hideRightViewControllerAnimated:(BOOL)animated;
@@ -223,10 +225,12 @@ typedef enum
 - (void)toggleRightViewController;
 
 - (void)panGestureRecognizerDidPan:(UIPanGestureRecognizer *)panGestureRecognizer;
-
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer;
-
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer;
+
+// Override to manage the size of the sides view controllers
+// Defaults are 0.8 for Iphone and 0.33 for iPad
+- (CGFloat)menuWidthRatio;
 
 @end
 
